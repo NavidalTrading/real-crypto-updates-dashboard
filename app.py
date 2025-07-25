@@ -1,4 +1,4 @@
-# Streamlit Dashboard for Real Crypto Updates (Logo Centered and Themed)
+# Streamlit Dashboard for Real Crypto Updates (With Pricing Footer)
 import streamlit as st
 import pandas as pd
 import requests
@@ -84,7 +84,16 @@ cta_html = '''
         </a>
     </div>
 '''
-
 st.markdown(cta_html, unsafe_allow_html=True)
+
+# --- Pricing Footer ---
+st.markdown("---")
+st.markdown("### 💼 Plans & Pricing")
+st.markdown("""
+- **Basic:** €19/month — Daily signals + dashboard access  
+- **Pro:** €39/month — All altcoin signals + early updates  
+- **Auto-Trader Bot:** Coming Soon  
+""")
+st.markdown("<div style='text-align: center;'><a href='#'><button style='background-color:#4CAF50; color:white; padding:10px 20px; font-size:16px; border:none; border-radius:8px;'>Upgrade Now</button></a></div>", unsafe_allow_html=True)
 
 
