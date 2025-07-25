@@ -105,10 +105,3 @@ pricing_html = """
 """
 st.markdown(pricing_html, unsafe_allow_html=True)
 '''
-
-# Save to file
-from pathlib import Path
-file_path = Path("/mnt/data/app.py")
-file_path.write_text(corrected_app_code)
-
-file_path.name
