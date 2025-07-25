@@ -34,7 +34,7 @@ st.sidebar.title("Real Crypto Updates")
 # --- Display Centered Logo ---
 st.markdown("""
     <div style='text-align: center;'>
-        <img src='https://raw.githubusercontent.com/your-username/your-repo/main/logo.png' width='200'/>
+        <img src='https://raw.githubusercontent.com/NavidalTrading/real-crypto-updates-dashboard/main/logo.png' width='200'/>
     </div>
 """, unsafe_allow_html=True)
 
