@@ -102,4 +102,3 @@ pricing_html = """
 </div>
 """
 st.markdown(pricing_html, unsafe_allow_html=True)
-'''
