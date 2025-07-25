@@ -1,4 +1,4 @@
-# Streamlit Dashboard for Real Crypto Updates (With Pricing Footer)
+# Streamlit Dashboard for Real Crypto Updates (With Centered Pricing)
 import streamlit as st
 import pandas as pd
 import requests
@@ -50,7 +50,7 @@ for coin in symbols:
     symbol_usdc = f"{coin}USDC"
     symbol_usdt = f"{coin}USDT"
     price = "N/A"
-    
+
     for symbol in [symbol_usdc, symbol_usdt]:
         try:
             response = requests.get(f"https://api.binance.com/api/v3/ticker/price?symbol={symbol}")
@@ -74,26 +74,28 @@ st.dataframe(df, use_container_width=True)
 st.markdown("---")
 st.markdown("<h2 style='text-align: center;'>🚧 Auto-Trader Bot</h2>", unsafe_allow_html=True)
 
-cta_html = '''
-    <div style="text-align: center;">
-        <p>Our 100x leverage auto-trading bot is launching soon.</p>
-        <a href="#" style="text-decoration: none;">
-            <button style="padding: 0.75em 1.5em; font-size: 16px; background-color: #00cc99; color: white; border: none; border-radius: 8px; cursor: pointer;">
-                Subscribe to get early access!
-            </button>
-        </a>
-    </div>
-'''
+cta_html = \"\"\"<div style='text-align: center;'>
+    <p>Our 100x leverage auto-trading bot is launching soon.</p>
+    <a href="#" style="text-decoration: none;">
+        <button style="padding: 0.75em 1.5em; font-size: 16px; background-color: #00cc99; color: white; border: none; border-radius: 8px; cursor: pointer;">
+            Subscribe to get early access!
+        </button>
+    </a>
+</div>\"\"\"
 st.markdown(cta_html, unsafe_allow_html=True)
 
-# --- Pricing Footer ---
+# --- Pricing Footer (Centered + Responsive) ---
 st.markdown("---")
-st.markdown("### 💼 Plans & Pricing")
-st.markdown("""
-- **Basic:** €19/month — Daily signals + dashboard access  
-- **Pro:** €39/month — All altcoin signals + early updates  
-- **Auto-Trader Bot:** Coming Soon  
-""")
-st.markdown("<div style='text-align: center;'><a href='#'><button style='background-color:#4CAF50; color:white; padding:10px 20px; font-size:16px; border:none; border-radius:8px;'>Upgrade Now</button></a></div>", unsafe_allow_html=True)
-
-
+pricing_html = \"\"\"<div style='text-align: center;'>
+    <h3>Plans & Pricing</h3>
+    <p><strong>Basic:</strong> EUR 19/month - Daily signals + dashboard access</p>
+    <p><strong>Pro:</strong> EUR 39/month - All altcoin signals + early updates</p>
+    <p><strong>Auto-Trader Bot:</strong> Coming Soon</p>
+    <a href='/subscribe' style='text-decoration: none;'>
+        <button style='background-color:#4CAF50; color:white; padding:10px 20px; font-size:16px; border:none; border-radius:8px; cursor:pointer; margin-top:10px;'>
+            Upgrade Now
+        </button>
+    </a>
+</div>\"\"\"
+st.markdown(pricing_html, unsafe_allow_html=True)
+'''
