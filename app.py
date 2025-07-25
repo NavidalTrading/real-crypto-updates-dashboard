@@ -1,3 +1,5 @@
+# Final clean version with corrected multi-line HTML syntax for CTA and pricing sections
+corrected_app_code = '''
 # Streamlit Dashboard for Real Crypto Updates (With Centered Pricing)
 import streamlit as st
 import pandas as pd
@@ -74,19 +76,22 @@ st.dataframe(df, use_container_width=True)
 st.markdown("---")
 st.markdown("<h2 style='text-align: center;'>🚧 Auto-Trader Bot</h2>", unsafe_allow_html=True)
 
-cta_html = \"\"\"<div style='text-align: center;'>
+cta_html = """
+<div style='text-align: center;'>
     <p>Our 100x leverage auto-trading bot is launching soon.</p>
     <a href="#" style="text-decoration: none;">
         <button style="padding: 0.75em 1.5em; font-size: 16px; background-color: #00cc99; color: white; border: none; border-radius: 8px; cursor: pointer;">
             Subscribe to get early access!
         </button>
     </a>
-</div>\"\"\"
+</div>
+"""
 st.markdown(cta_html, unsafe_allow_html=True)
 
 # --- Pricing Footer (Centered + Responsive) ---
 st.markdown("---")
-pricing_html = \"\"\"<div style='text-align: center;'>
+pricing_html = """
+<div style='text-align: center;'>
     <h3>Plans & Pricing</h3>
     <p><strong>Basic:</strong> EUR 19/month - Daily signals + dashboard access</p>
     <p><strong>Pro:</strong> EUR 39/month - All altcoin signals + early updates</p>
@@ -96,6 +101,14 @@ pricing_html = \"\"\"<div style='text-align: center;'>
             Upgrade Now
         </button>
     </a>
-</div>\"\"\"
+</div>
+"""
 st.markdown(pricing_html, unsafe_allow_html=True)
 '''
+
+# Save to file
+from pathlib import Path
+file_path = Path("/mnt/data/app.py")
+file_path.write_text(corrected_app_code)
+
+file_path.name
