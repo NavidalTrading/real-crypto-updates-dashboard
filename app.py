@@ -1,4 +1,4 @@
-# Streamlit Dashboard for Real Crypto Updates (with live prices, smart theming, and call-to-action)
+# Streamlit Dashboard for Real Crypto Updates (Final Clean Version)
 import streamlit as st
 import pandas as pd
 import requests
@@ -73,14 +73,17 @@ st.dataframe(df, use_container_width=True)
 # --- Coming Soon CTA Section ---
 st.markdown("---")
 st.markdown("<h2 style='text-align: center;'>🚧 Auto-Trader Bot</h2>", unsafe_allow_html=True)
-st.markdown("""
-    <div style='text-align: center;'>
+
+cta_html = '''
+    <div style="text-align: center;">
         <p>Our 100x leverage auto-trading bot is launching soon.</p>
-        <a href="#" style='text-decoration: none;'>
-            <button style='padding: 0.75em 1.5em; font-size: 16px; background-color: #00cc99; color: white; border: none; border-radius: 8px; cursor: pointer;'>
+        <a href="#" style="text-decoration: none;">
+            <button style="padding: 0.75em 1.5em; font-size: 16px; background-color: #00cc99; color: white; border: none; border-radius: 8px; cursor: pointer;">
                 Subscribe to get early access!
             </button>
         </a>
-    </d
+    </div>
+'''
 
+st.markdown(cta_html, unsafe_allow_html=True)
 
