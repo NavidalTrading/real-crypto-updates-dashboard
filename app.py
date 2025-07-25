@@ -1,5 +1,3 @@
-# Final clean version with corrected multi-line HTML syntax for CTA and pricing sections
-corrected_app_code = '''
 # Streamlit Dashboard for Real Crypto Updates (With Centered Pricing)
 import streamlit as st
 import pandas as pd
