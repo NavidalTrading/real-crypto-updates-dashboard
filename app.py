@@ -1,4 +1,4 @@
-# Streamlit Dashboard for Real Crypto Updates (Final Clean Version)
+# Streamlit Dashboard for Real Crypto Updates (Final Version with Working Logo)
 import streamlit as st
 import pandas as pd
 import requests
@@ -31,12 +31,8 @@ else:
 # --- Sidebar Branding ---
 st.sidebar.title("Real Crypto Updates")
 
-# --- Centered Logo ---
-st.markdown("""
-    <div style='text-align: center;'>
-        <img src='logo.png' width='200'/>
-    </div>
-""", unsafe_allow_html=True)
+# --- Display Logo Properly ---
+st.image("logo.png", width=200)
 
 # --- Title and Slogan ---
 st.markdown("<h1 style='text-align: center;'>📈 Real Crypto Updates Dashboard</h1>", unsafe_allow_html=True)
@@ -86,4 +82,5 @@ cta_html = '''
 '''
 
 st.markdown(cta_html, unsafe_allow_html=True)
+
 
