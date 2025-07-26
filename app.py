@@ -19,7 +19,7 @@ else:
     st.success("Access Granted.")
 
 # Theme switch
-mode = st.sidebar.radio("Theme Mode", ["Dark", "Light"])
+mode = st.sidebar.radio("Theme Mode", [ "Light"])
 if mode == "Light":
     st.markdown("""
         <style>
