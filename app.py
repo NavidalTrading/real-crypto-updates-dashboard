@@ -17,7 +17,7 @@ if user_password != valid_password:
     st.stop()
 else:
     st.success("Access Granted.")
-     return st.session_state.authenticated
+    
 
 # Theme switch
 mode = st.sidebar.radio("Theme Mode", [ "Light"])
