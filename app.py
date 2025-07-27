@@ -113,75 +113,70 @@ with st.expander("How do I get access to the dashboard?"):
 
 with st.expander("How long is the dashboard password valid?"):
     st.markdown("Once your payment is confirmed, you'll receive a password for the current month. The password is **valid for 30 days** and changes monthly.")
-"""
-st.markdown("""
-<!-- Crypto Daniel AI Chatbot -->
-<div class="chat-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 999; background: #fff; border-radius: 12px; padding: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.3); width: 300px;">
-  <div class="chat-header" style="font-weight: bold; margin-bottom: 5px;"> Crypto Daniel</div>
-  <div id="chat-box" style="height: 180px; overflow-y: auto; margin-bottom: 5px;"></div>
+"""# Chatbot UI
+st.markdown(\"\"\"
+<!-- Crypto Daniel Chatbot -->
+<div class="chat-container" style="position: fixed; bottom: 20px; right: 20px; width: 300px; background: white; padding: 10px; border-radius: 10px; box-shadow: 0 0 10px #ccc; z-index: 999;">
+  <div style="font-weight: bold; margin-bottom: 5px;">🤖 Crypto Daniel</div>
+  <div id="chat-box" style="height: 150px; overflow-y: auto; border: 1px solid #ccc; padding: 5px; margin-bottom: 5px;"></div>
   <form id="chat-form">
-    <input type="text" id="user-input" placeholder="Ask me anything..." style="width: 100%; padding: 8px;" required />
+    <input id="user-input" type="text" placeholder="Ask me..." style="width: 100%; padding: 6px;" required>
     <button type="submit" style="margin-top: 5px; width: 100%;">Send</button>
   </form>
 </div>
-""", unsafe_allow_html=True)
-st.markdown("""
-<button onclick="toggleVoice()" style="position: fixed; bottom: 20px; left: 20px; padding: 10px 16px; background: #444; color: #fff; border-radius: 8px; border: none; z-index: 1000;">Voice</button>
-""", unsafe_allow_html=True)
-st.markdown("""
+
+<!-- Voice button -->
+<button onclick="toggleVoice()" style="position: fixed; bottom: 20px; left: 20px; padding: 10px; background: #444; color: white; border-radius: 8px;">🔊 Voice</button>
+
 <script>
-  const userLang = navigator.language || navigator.userLanguage;
-  const isRomanian = userLang.startsWith("ro");
-  let currentLang = isRomanian ? "ro" : "en";
-  let voiceEnabled = false;
-  const synth = window.speechSynthesis;
+const userLang = navigator.language || navigator.userLanguage;
+let currentLang = userLang.startsWith("ro") ? "ro" : "en";
+let voiceEnabled = false;
 
-  function getResponse(message) {
-    const lower = message.toLowerCase();
-    if (lower.includes("price")) {
-      return currentLang === "ro" ? "Planul Basic este 19€/lună, iar Pro este 39€/lună." : "The Basic Plan is €19/month and the Pro Plan is €39/month.";
-    } else if (lower.includes("signal")) {
-      return currentLang === "ro" ? "Semnalele zilnice sunt disponibile în dashboard la ora 20:00 EET." : "Daily signals are available in the dashboard at 20:00 EET.";
-    } else if (lower.includes("dashboard")) {
-      return currentLang === "ro" ? "Accesează dashboard-ul după autentificare cu parola lunii curente." : "Access the dashboard after logging in with this month's password.";
-    } else if (lower.includes("pay") || lower.includes("buy")) {
-      return currentLang === "ro" ? "<a href='https://checkout.revolut.com/pay/a1b9167e-f3c2-41b5-85f6-b9db57fd6efc' target='_blank'>Click aici pentru a plăti Planul Basic</a><br><a href='https://checkout.revolut.com/pay/b83947eb-463d-46b2-91af-6e1a44115e0a' target='_blank'>Click aici pentru a plăti Planul Pro</a>" : "<a href='https://checkout.revolut.com/pay/a1b9167e-f3c2-41b5-85f6-b9db57fd6efc' target='_blank'>Click here to pay for Basic Plan</a><br><a href='https://checkout.revolut.com/pay/b83947eb-463d-46b2-91af-6e1a44115e0a' target='_blank'>Click here to pay for Pro Plan</a>";
-    } else {
-      return currentLang === "ro" ? "Încă învăț. Poți reformula întrebarea?" : "I'm still learning. Can you rephrase?";
-    }
-  }
+function getResponse(message) {
+  const m = message.toLowerCase();
+  if (m.includes("price")) return currentLang === "ro" ? "Basic: 19€/lună, Pro: 39€/lună." : "Basic: €19/month, Pro: €39/month.";
+  if (m.includes("signal")) return currentLang === "ro" ? "Semnalele sunt trimise zilnic la ora 20:00 EET." : "Signals sent daily at 20:00 EET.";
+  if (m.includes("pay")) return currentLang === "ro"
+    ? "<a href='https://checkout.revolut.com/pay/a1b9167e-f3c2-41b5-85f6-b9db57fd6efc' target='_blank'>Plătește Basic</a><br><a href='https://checkout.revolut.com/pay/b83947eb-463d-46b2-91af-6e1a44115e0a' target='_blank'>Plătește Pro</a>"
+    : "<a href='https://checkout.revolut.com/pay/a1b9167e-f3c2-41b5-85f6-b9db57fd6efc' target='_blank'>Pay Basic</a><br><a href='https://checkout.revolut.com/pay/b83947eb-463d-46b2-91af-6e1a44115e0a' target='_blank'>Pay Pro</a>";
+  if (m.includes("upload")) return currentLang === "ro" ? "Încarcă dovada de plată în bara laterală." : "Upload your payment proof in the sidebar.";
+  if (m.includes("password")) return currentLang === "ro" ? "Parola lunii este trimisă după verificare." : "Monthly password is sent after verification.";
+  return currentLang === "ro" ? "Încă învăț. Poți reformula?" : "I'm still learning. Please rephrase.";
+}
 
-  function speak(text) {
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = currentLang === "ro" ? "ro-RO" : "en-US";
-    utter.voice = synth.getVoices().find(v => v.name.includes("Male") || v.name.includes("Bărbat")) || synth.getVoices()[0];
-    synth.speak(utter);
-  }
+function speak(text) {
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = currentLang === "ro" ? "ro-RO" : "en-US";
+  const voices = window.speechSynthesis.getVoices();
+  utter.voice = voices.find(v => v.name.includes("Male")) || voices[0];
+  window.speechSynthesis.speak(utter);
+}
 
-  function toggleVoice() {
-    voiceEnabled = !voiceEnabled;
-    const status = voiceEnabled ? (currentLang === "ro" ? "Vocea activată" : "Voice enabled") : (currentLang === "ro" ? "Vocea dezactivată" : "Voice disabled");
-    alert(status);
-  }
+function toggleVoice() {
+  voiceEnabled = !voiceEnabled;
+  alert(voiceEnabled ? (currentLang === "ro" ? "Voce activată" : "Voice on") : (currentLang === "ro" ? "Voce oprită" : "Voice off"));
+}
 
-  document.addEventListener("DOMContentLoaded", () => {
-    const form = document.querySelector("#chat-form");
-    const input = document.querySelector("#user-input");
-    const chatbox = document.querySelector("#chat-box");
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("chat-form");
+  const input = document.getElementById("user-input");
+  const chatbox = document.getElementById("chat-box");
 
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const message = input.value.trim();
-      if (message) {
-        chatbox.innerHTML += `<div class='user'>${message}</div>`;
-        const reply = getResponse(message);
-        chatbox.innerHTML += `<div class='bot'>${reply}</div>`;
-        input.value = "";
-        chatbox.scrollTop = chatbox.scrollHeight;
-        if (voiceEnabled) speak(reply);
-      }
-    });
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    const msg = input.value.trim();
+    if (!msg) return;
+    chatbox.innerHTML += `<div><strong>You:</strong> ${msg}</div>`;
+    const reply = getResponse(msg);
+    chatbox.innerHTML += `<div><strong>Bot:</strong> ${reply}</div>`;
+    input.value = "";
+    chatbox.scrollTop = chatbox.scrollHeight;
+    if (voiceEnabled) speak(reply);
   });
+});
 </script>
+\"\"\", unsafe_allow_html=True)
 """
+
 
