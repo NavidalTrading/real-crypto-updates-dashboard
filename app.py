@@ -63,6 +63,8 @@ if not st.session_state["authenticated"]:
     password_gate()
 st.stop()  # Stop here if not logged in
 
+else:
+
 # Theme switch
 mode = st.sidebar.radio("Theme Mode", [ "Light"])
 if mode == "Light":
