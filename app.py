@@ -34,7 +34,7 @@ def password_gate():
             st.session_state["auth_expiry"] = datetime.now() + timedelta(days=30)
             st.info(f"Your password for **{current_month.capitalize()}** is: `{expected_password}`\\n\\nAccess valid for 30 days.")
         else:
-            st.warning("❌ Unable to verify payment. Make sure the filename includes 'basic' or 'pro'.")
+            st.warning("❌ Unable to verify payment.")
 
     password = st.text_input("Password", type="password")
     if st.button("Submit"):
