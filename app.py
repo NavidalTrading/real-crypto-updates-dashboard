@@ -65,9 +65,9 @@ st.stop()  # Stop here if not logged in
 
 
 # Theme switch
-else:
-mode = st.sidebar.radio("Theme Mode", [ "Light"])
-if mode == "Light":
+
+if mode = st.sidebar.radio("Theme Mode", [ "Light"])
+ mode == "Light":
     st.markdown("""
         <style>
         body, html, .main, .block-container {
