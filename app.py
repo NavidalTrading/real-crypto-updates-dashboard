@@ -118,7 +118,7 @@ with st.expander("How long is the dashboard password valid?"):
 chatbot_widget = """
 <!-- Crypto Daniel AI Chatbot -->
 <div class="chat-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 999; background: #fff; border-radius: 12px; padding: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.3); width: 300px;">
-  <div class="chat-header" style="font-weight: bold; margin-bottom: 5px;">🤖 Crypto Daniel</div>
+  <div class="chat-header" style="font-weight: bold; margin-bottom: 5px;"> Crypto Daniel</div>
   <div id="chat-box" style="height: 180px; overflow-y: auto; margin-bottom: 5px;"></div>
   <form id="chat-form">
     <input type="text" id="user-input" placeholder="Ask me anything..." style="width: 100%; padding: 8px;" required />
