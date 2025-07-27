@@ -13,18 +13,54 @@ def get_current_password():
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
-if not st.session_state.authenticated:
+if "auth_expiry" not in st.session_state:
+    st.session_state["auth_expiry"] = None
+
+def extract_plan_from_filename(filename):
+    fname = filename.lower()
+    if "basic" in fname:
+        return "Basic"
+    elif "pro" in fname:
+        return "Pro"
+    return None
+
+def password_gate():
     st.title("🔐 Enter Password to Access Dashboard")
-    password = st.text_input("Password", type="password")
     uploaded_file = st.file_uploader("Upload Payment Proof", type=["png", "jpg", "jpeg", "pdf"])
+
     if uploaded_file:
-        st.success("✅ Payment proof received. You will receive your password shortly.")
-    if st.button("Submit"):
-        if password == get_current_password():
-            st.session_state.authenticated = True
-            st.rerun()
+        plan = extract_plan_from_filename(uploaded_file.name)
+        current_month = datetime.now().strftime("%B").lower()
+        expected_password = f"realcrypto-{current_month}"
+        if plan:
+            st.success(f"✅ Crypto Daniel verified your **{plan} Plan** payment proof.")
+            st.session_state["authenticated"] = True
+            st.session_state["auth_expiry"] = datetime.now() + timedelta(days=30)
+            st.info(f"Your password for **{current_month.capitalize()}** is: `{expected_password}`\\n\\nAccess valid for 30 days.")
         else:
-            st.error("Incorrect password.")
+            st.warning("❌ Unable to verify payment. Make sure the filename includes 'basic' or 'pro'.")
+
+    password = st.text_input("Password", type="password")
+    if st.button("Submit"):
+        expected_password = f"realcrypto-{datetime.now().strftime('%B').lower()}"
+        if password == expected_password:
+            st.session_state["authenticated"] = True
+            st.session_state["auth_expiry"] = datetime.now() + timedelta(days=30)
+            st.success("✅ Access granted. Welcome!")
+            st.experimental_rerun()
+        else:
+            st.error("❌ Incorrect password.")
+
+# Re-check validity
+if st.session_state["authenticated"]:
+    if st.session_state["auth_expiry"] and datetime.now() > st.session_state["auth_expiry"]:
+        st.session_state["authenticated"] = False
+        st.warning("⚠️ Your session expired. Please re-authenticate.")
+        st.experimental_rerun()
+
+# Enforce gate
+if not st.session_state["authenticated"]:
+    password_gate()
 
     st.stop()  # Stop here if not logged in
 
