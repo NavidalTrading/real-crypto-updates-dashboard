@@ -19,6 +19,28 @@ def extract_plan_from_filename(filename):
     elif "pro" in fname:
         return "Pro"
     return None
+    # === PASSWORD SECTION ===
+PASSWORDS = {
+    '07': 'RCU-JULY',
+    '08': 'RCU-AUGUST',
+    '09': 'RCU-SEPTEMBER'
+}
+current_month = datetime.now().strftime('%m')
+current_password = PASSWORDS.get(current_month, None)
+
+if 'authenticated' not in st.session_state:
+    st.session_state.authenticated = False
+
+if not st.session_state.authenticated:
+    st.title("🔐 Enter Dashboard Password")
+    user_pass = st.text_input("Password", type="password")
+    if user_pass == current_password:
+        st.session_state.authenticated = True
+        st.success("Access granted!")
+        st.experimental_rerun()
+    elif user_pass:
+        st.error("Incorrect password.")
+    st.stop()
 
 def password_gate():
     st.title("🔐 Enter Password to Access Dashboard")
