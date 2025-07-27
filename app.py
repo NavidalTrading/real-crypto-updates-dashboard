@@ -163,7 +163,9 @@ st.markdown("""
 </div>
 
 <button onclick="toggleVoice()" style="position: fixed; bottom: 20px; left: 20px; padding: 10px 16px; background: #444; color: #fff; border-radius: 8px; border: none; z-index: 1000;">🔊 Voice</button>
+""", unsafe_allow_html=True)
 
+st.markdown("""
 <script>
   let voiceEnabled = false;
   let currentLang = navigator.language.startsWith("ro") ? "ro" : "en";
