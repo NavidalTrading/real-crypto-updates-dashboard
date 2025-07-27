@@ -114,8 +114,6 @@ with st.expander("How do I get access to the dashboard?"):
 with st.expander("How long is the dashboard password valid?"):
     st.markdown("Once your payment is confirmed, you'll receive a password for the current month. The password is **valid for 30 days** and changes monthly.")
 """
-# Chatbot and Voice Assistant (injected safely)
-chatbot_widget = """
 st.markdown("""
 <!-- Crypto Daniel AI Chatbot -->
 <div class="chat-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 999; background: #fff; border-radius: 12px; padding: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.3); width: 300px;">
