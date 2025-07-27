@@ -198,16 +198,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const input = document.getElementById("user-input");
   const chatbox = document.getElementById("chat-box");
 
-  form.addEventListener("submit", e => {
-    e.preventDefault();
-    const msg = input.value.trim();
-    if (!msg) return;
-    chatbox.innerHTML += `<div><strong>You:</strong> ${msg}</div>`;
-    const reply = getResponse(msg);
-    chatbox.innerHTML += `<div><strong>Bot:</strong> ${reply}</div>`;
-    input.value = "";
-    chatbox.scrollTop = chatbox.scrollHeight;
-    if (voiceEnabled) speak(reply);
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();  // ⛔ Prevent Streamlit form reload
+    const message = input.value.trim();
+    if (message) {
+      chatbox.innerHTML += `<div class='user'>${message}</div>`;
+      const reply = getResponse(message);
+      chatbox.innerHTML += `<div class='bot'>${reply}</div>`;
+      input.value = "";
+      chatbox.scrollTop = chatbox.scrollHeight;
+      if (voiceEnabled) speak(reply);
+    }
   });
 });
 </script>
