@@ -164,19 +164,18 @@ st.markdown("""
 <button onclick="toggleVoice()" style="position: fixed; bottom: 20px; left: 20px; padding: 10px 16px; background: #444; color: #fff; border-radius: 8px; border: none; z-index: 1000;">🔊 Voice</button>
 
 <script>
-  const userLang = navigator.language || navigator.userLanguage;
-  let currentLang = userLang.startsWith("ro") ? "ro" : "en";
   let voiceEnabled = false;
+  let currentLang = navigator.language.startsWith("ro") ? "ro" : "en";
 
   function getResponse(message) {
     const m = message.toLowerCase();
     if (m.includes("price")) return currentLang === "ro" ? "Basic: 19€/lună, Pro: 39€/lună." : "Basic: €19/month, Pro: €39/month.";
-    if (m.includes("signal")) return currentLang === "ro" ? "Semnalele sunt trimise zilnic la ora 20:00 EET." : "Signals sent daily at 20:00 EET.";
+    if (m.includes("signal")) return currentLang === "ro" ? "Semnalele vin zilnic la ora 20:00 EET." : "Signals come daily at 20:00 EET.";
     if (m.includes("pay")) return currentLang === "ro"
       ? "<a href='https://checkout.revolut.com/pay/a1b9167e-f3c2-41b5-85f6-b9db57fd6efc' target='_blank'>Plătește Basic</a><br><a href='https://checkout.revolut.com/pay/b83947eb-463d-46b2-91af-6e1a44115e0a' target='_blank'>Plătește Pro</a>"
       : "<a href='https://checkout.revolut.com/pay/a1b9167e-f3c2-41b5-85f6-b9db57fd6efc' target='_blank'>Pay Basic</a><br><a href='https://checkout.revolut.com/pay/b83947eb-463d-46b2-91af-6e1a44115e0a' target='_blank'>Pay Pro</a>";
-    if (m.includes("password")) return currentLang === "ro" ? "După ce încarci dovada de plată, primești parola curentă." : "After uploading proof of payment, you'll receive this month's password.";
-    return currentLang === "ro" ? "Încă învăț. Poți reformula?" : "I'm still learning. Please rephrase.";
+    if (m.includes("password")) return currentLang === "ro" ? "După plata, primești parola valabilă 30 zile." : "After payment, you'll receive a password valid for 30 days.";
+    return currentLang === "ro" ? "Încă învăț. Poți reformula?" : "Still learning. Please rephrase.";
   }
 
   function speak(text) {
@@ -189,25 +188,31 @@ st.markdown("""
 
   function toggleVoice() {
     voiceEnabled = !voiceEnabled;
-    alert(voiceEnabled ? (currentLang === "ro" ? "Voce activată" : "Voice on") : (currentLang === "ro" ? "Voce oprită" : "Voice off"));
+    alert(voiceEnabled ? (currentLang === "ro" ? "Vocea este activă" : "Voice is active") : (currentLang === "ro" ? "Vocea este oprită" : "Voice is off"));
   }
 
-  window.onload = function () {
+  // This ensures the DOM elements are always available and bound
+  const observer = new MutationObserver(() => {
     const input = document.getElementById("user-input");
     const chatbox = document.getElementById("chat-box");
     const sendBtn = document.getElementById("send-btn");
 
-    sendBtn.addEventListener("click", function () {
-      const msg = input.value.trim();
-      if (!msg) return;
-      chatbox.innerHTML += `<div><strong>You:</strong> ${msg}</div>`;
-      const reply = getResponse(msg);
-      chatbox.innerHTML += `<div><strong>Bot:</strong> ${reply}</div>`;
-      input.value = "";
-      chatbox.scrollTop = chatbox.scrollHeight;
-      if (voiceEnabled) speak(reply);
-    });
-  };
+    if (input && chatbox && sendBtn && !sendBtn.dataset.bound) {
+      sendBtn.dataset.bound = "true";
+      sendBtn.addEventListener("click", () => {
+        const msg = input.value.trim();
+        if (!msg) return;
+        chatbox.innerHTML += `<div><strong>You:</strong> ${msg}</div>`;
+        const reply = getResponse(msg);
+        chatbox.innerHTML += `<div><strong>Bot:</strong> ${reply}</div>`;
+        input.value = "";
+        chatbox.scrollTop = chatbox.scrollHeight;
+        if (voiceEnabled) speak(reply);
+      });
+    }
+  });
+
+  observer.observe(document.body, { childList: true, subtree: true });
 </script>
 """, unsafe_allow_html=True)
 
