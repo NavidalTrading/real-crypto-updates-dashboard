@@ -37,7 +37,7 @@ if not st.session_state.authenticated:
     if user_pass == current_password:
         st.session_state.authenticated = True
         st.success("Access granted!")
-        st.experimental_rerun()
+        st.rerun()
     elif user_pass:
         st.error("Incorrect password.")
     st.stop()
