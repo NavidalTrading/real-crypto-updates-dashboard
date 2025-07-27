@@ -55,9 +55,10 @@ if st.session_state["authenticated"]:
         st.rerun()
 
 # Enforce gate
-if not st.session_state["authenticated"]:
+if not st.session_state.get("authenticated", False):
     password_gate()
-st.stop()  # Stop here if not logged in
+    st.stop()  # Only stop if password not yet provided
+
 
 # Theme switch
 mode = st.sidebar.radio("Theme Mode", [ "Light"])
