@@ -47,7 +47,7 @@ def password_gate():
             st.session_state["authenticated"] = True
             st.session_state["auth_expiry"] = datetime.now() + timedelta(days=30)
             st.success("✅ Access granted. Welcome!")
-            st.experimental_rerun()
+            st.rerun()
         else:
             st.error("❌ Incorrect password.")
 
