@@ -211,38 +211,6 @@ st.markdown("""
 </script>
 """, unsafe_allow_html=True)
 
-# Initialize chat history
-if "chat_history" not in st.session_state:
-    st.session_state.chat_history = []
-
-st.markdown("### 💬 Crypto Daniel – Chat with AI")
-
-# User input
-user_input = st.text_input("Ask me anything...")
-
-# Define simple logic for reply
-def get_reply(message):
-    message = message.lower()
-    if "price" in message:
-        return "The Basic Plan is €19/month and the Pro Plan is €39/month."
-    elif "signal" in message:
-        return "Daily signal updates are available in the dashboard at 20:00 EET."
-    elif "pay" in message or "buy" in message:
-        return "Click here to pay: [Basic Plan](https://checkout.revolut.com/pay/a1b9167e-f3c2-41b5-85f6-b9db57fd6efc) or [Pro Plan](https://checkout.revolut.com/pay/b83947eb-463d-46b2-91af-6e1a44115e0a)"
-    else:
-        return "I'm still learning. Can you rephrase?"
-
-# Show conversation
-for chat in st.session_state.chat_history:
-    st.markdown(f"**You:** {chat['user']}")
-    st.markdown(f"**Crypto Daniel:** {chat['bot']}")
-
-# On user input
-if user_input:
-    reply = get_reply(user_input)
-    st.session_state.chat_history.append({"user": user_input, "bot": reply})
-    st.rerun()
-
 
 
 
