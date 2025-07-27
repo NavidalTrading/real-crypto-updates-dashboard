@@ -158,56 +158,56 @@ st.markdown("""
     <input id="user-input" type="text" placeholder="Ask me..." style="width: 100%; padding: 6px;" required>
     <button type="submit" style="margin-top: 5px; width: 100%;">Send</button>
   </form>
-</div><!-- Voice button -->
+</div>
+<!-- Voice button -->
 <button onclick="toggleVoice()" style="position: fixed; bottom: 20px; left: 20px; padding: 10px; background: #444; color: white; border-radius: 8px;"> Voice</button>
 
+st.markdown("""
 <script>
-const userLang = navigator.language || navigator.userLanguage;
-let currentLang = userLang.startsWith("ro") ? "ro" : "en";
-let voiceEnabled = false;
+  const userLang = navigator.language || navigator.userLanguage;
+  let currentLang = userLang.startsWith("ro") ? "ro" : "en";
+  let voiceEnabled = false;
 
-function getResponse(message) {
-  const m = message.toLowerCase();
-  if (m.includes("price")) return currentLang === "ro" ? "Basic: 19€/lună, Pro: 39€/lună." : "Basic: €19/month, Pro: €39/month.";
-  if (m.includes("signal")) return currentLang === "ro" ? "Semnalele sunt trimise zilnic la ora 20:00 EET." : "Signals sent daily at 20:00 EET.";
-  if (m.includes("pay")) return currentLang === "ro"
-    ? "<a href='https://checkout.revolut.com/pay/a1b9167e-f3c2-41b5-85f6-b9db57fd6efc' target='_blank'>Plătește Basic</a><br><a href='https://checkout.revolut.com/pay/b83947eb-463d-46b2-91af-6e1a44115e0a' target='_blank'>Plătește Pro</a>"
-    : "<a href='https://checkout.revolut.com/pay/a1b9167e-f3c2-41b5-85f6-b9db57fd6efc' target='_blank'>Pay Basic</a><br><a href='https://checkout.revolut.com/pay/b83947eb-463d-46b2-91af-6e1a44115e0a' target='_blank'>Pay Pro</a>";
-  if (m.includes("upload")) return currentLang === "ro" ? "Încarcă dovada de plată în bara laterală." : "Upload your payment proof in the sidebar.";
-  if (m.includes("password")) return currentLang === "ro" ? "Parola lunii este trimisă după verificare." : "Monthly password is sent after verification.";
-  return currentLang === "ro" ? "Încă învăț. Poți reformula?" : "I'm still learning. Please rephrase.";
-}
+  function getResponse(message) {
+    const m = message.toLowerCase();
+    if (m.includes("price")) return currentLang === "ro" ? "Basic: 19€/lună, Pro: 39€/lună." : "Basic: €19/month, Pro: €39/month.";
+    if (m.includes("signal")) return currentLang === "ro" ? "Semnalele sunt trimise zilnic la ora 20:00 EET." : "Signals sent daily at 20:00 EET.";
+    if (m.includes("pay")) return currentLang === "ro"
+      ? "<a href='https://checkout.revolut.com/pay/a1b9167e-f3c2-41b5-85f6-b9db57fd6efc' target='_blank'>Plătește Basic</a><br><a href='https://checkout.revolut.com/pay/b83947eb-463d-46b2-91af-6e1a44115e0a' target='_blank'>Plătește Pro</a>"
+      : "<a href='https://checkout.revolut.com/pay/a1b9167e-f3c2-41b5-85f6-b9db57fd6efc' target='_blank'>Pay Basic</a><br><a href='https://checkout.revolut.com/pay/b83947eb-463d-46b2-91af-6e1a44115e0a' target='_blank'>Pay Pro</a>";
+    if (m.includes("password")) return currentLang === "ro" ? "După ce încarci dovada de plată, primești parola curentă." : "After uploading proof of payment, you'll receive this month's password.";
+    return currentLang === "ro" ? "Încă învăț. Poți reformula?" : "I'm still learning. Please rephrase.";
+  }
 
-function speak(text) {
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = currentLang === "ro" ? "ro-RO" : "en-US";
-  const voices = window.speechSynthesis.getVoices();
-  utter.voice = voices.find(v => v.name.includes("Male")) || voices[0];
-  window.speechSynthesis.speak(utter);
-}
+  function speak(text) {
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = currentLang === "ro" ? "ro-RO" : "en-US";
+    const voices = window.speechSynthesis.getVoices();
+    utter.voice = voices.find(v => v.name.includes("Male")) || voices[0];
+    window.speechSynthesis.speak(utter);
+  }
 
-function toggleVoice() {
-  voiceEnabled = !voiceEnabled;
-  alert(voiceEnabled ? (currentLang === "ro" ? "Voce activată" : "Voice on") : (currentLang === "ro" ? "Voce oprită" : "Voice off"));
-}
+  function toggleVoice() {
+    voiceEnabled = !voiceEnabled;
+    alert(voiceEnabled ? (currentLang === "ro" ? "Voce activată" : "Voice on") : (currentLang === "ro" ? "Voce oprită" : "Voice off"));
+  }
 
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("chat-form");
-  const input = document.getElementById("user-input");
-  const chatbox = document.getElementById("chat-box");
+  window.onload = function () {
+    const input = document.getElementById("user-input");
+    const chatbox = document.getElementById("chat-box");
+    const sendBtn = document.getElementById("send-btn");
 
-  form.addEventListener("submit", e => {
-    e.preventDefault();
-    const msg = input.value.trim();
-    if (!msg) return;
-    chatbox.innerHTML += `<div><strong>You:</strong> ${msg}</div>`;
-    const reply = getResponse(msg);
-    chatbox.innerHTML += `<div><strong>Bot:</strong> ${reply}</div>`;
-    input.value = "";
-    chatbox.scrollTop = chatbox.scrollHeight;
-    if (voiceEnabled) speak(reply);
-  });
-});
+    sendBtn.addEventListener("click", function () {
+      const msg = input.value.trim();
+      if (!msg) return;
+      chatbox.innerHTML += `<div><strong>You:</strong> ${msg}</div>`;
+      const reply = getResponse(msg);
+      chatbox.innerHTML += `<div><strong>Bot:</strong> ${reply}</div>`;
+      input.value = "";
+      chatbox.scrollTop = chatbox.scrollHeight;
+      if (voiceEnabled) speak(reply);
+    });
+  };
 </script>
 """, unsafe_allow_html=True)
 
