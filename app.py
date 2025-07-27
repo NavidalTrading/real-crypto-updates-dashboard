@@ -182,6 +182,5 @@ chatbot_widget = """
     });
   });
 </script>
-"""
 
 st.markdown(chatbot_widget, unsafe_allow_html=True)
