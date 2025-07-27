@@ -56,13 +56,12 @@ if st.session_state["authenticated"]:
     if st.session_state["auth_expiry"] and datetime.now() > st.session_state["auth_expiry"]:
         st.session_state["authenticated"] = False
         st.warning("⚠️ Your session expired. Please re-authenticate.")
-        st.experimental_rerun()
+        st.rerun()
 
 # Enforce gate
 if not st.session_state["authenticated"]:
     password_gate()
-
-    st.stop()  # Stop here if not logged in
+st.stop()  # Stop here if not logged in
 
 # Theme switch
 mode = st.sidebar.radio("Theme Mode", [ "Light"])
