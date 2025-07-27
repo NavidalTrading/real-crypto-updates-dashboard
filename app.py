@@ -63,11 +63,6 @@ if not st.session_state["authenticated"]:
     password_gate()
 st.stop()  # Stop here if not logged in
 
-st.subheader("🔐 Secure Access")
-input_password = st.text_input("Enter the monthly password:", type="password")
-
-correct_password = "your_expected_password"  # Replace with dynamic or current password logic
-
 if input_password != correct_password:
     st.warning("Incorrect password. Please try again.")
     st.stop()  # Prevent rest of the app from rendering if password is wrong
