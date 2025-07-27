@@ -5,6 +5,13 @@ import requests
 from datetime import datetime, timedelta
 import streamlit.components.v1 as components
 
+if "authenticated" not in st.session_state:
+    st.session_state["authenticated"] = False
+
+if not st.session_state["authenticated"]:
+    show_password_panel()
+    st.stop()
+
 # Utility to get the current valid monthly password
 def get_current_password():
     return f"RCU-{datetime.now().strftime('%B').upper()}-2025"
