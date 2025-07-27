@@ -116,6 +116,7 @@ with st.expander("How long is the dashboard password valid?"):
 """
 # Chatbot and Voice Assistant (injected safely)
 chatbot_widget = """
+st.markdown("""
 <!-- Crypto Daniel AI Chatbot -->
 <div class="chat-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 999; background: #fff; border-radius: 12px; padding: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.3); width: 300px;">
   <div class="chat-header" style="font-weight: bold; margin-bottom: 5px;"> Crypto Daniel</div>
@@ -125,6 +126,7 @@ chatbot_widget = """
     <button type="submit" style="margin-top: 5px; width: 100%;">Send</button>
   </form>
 </div>
+""", unsafe_allow_html=True)
 
 <button onclick="toggleVoice()" style="position: fixed; bottom: 20px; left: 20px; padding: 10px 16px; background: #444; color: #fff; border-radius: 8px; border: none; z-index: 1000;">Voice</button>
 
