@@ -186,5 +186,3 @@ st.markdown("""
   });
 </script>
 """, unsafe_allow_html=True)
-
-st.markdown(chatbot_widget, unsafe_allow_html=True)
