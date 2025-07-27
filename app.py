@@ -5,10 +5,6 @@ import requests
 from datetime import datetime, timedelta
 import streamlit.components.v1 as components
 
-# Utility to get the current valid monthly password
-def get_current_password():
-    return f"RCU-{datetime.now().strftime('%B').upper()}-2025"
-
 # Initialize login state
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
@@ -62,14 +58,6 @@ if st.session_state["authenticated"]:
 if not st.session_state["authenticated"]:
     password_gate()
 st.stop()  # Stop here if not logged in
-
-if input_password != correct_password:
-    st.warning("Incorrect password. Please try again.")
-    st.stop()  # Prevent rest of the app from rendering if password is wrong
-
-# --- From here the dashboard will render ONLY IF password is correct ---
-st.success("Access granted!")
-
 
 # Theme switch
 mode = st.sidebar.radio("Theme Mode", [ "Light"])
