@@ -149,20 +149,20 @@ with st.expander("How do I get access to the dashboard?"):
 with st.expander("How long is the dashboard password valid?"):
     st.markdown("Once your payment is confirmed, you'll receive a password for the current month. The password is **valid for 30 days** and changes monthly.")
 # Chatbot UI
+# Chatbot HTML container
 st.markdown("""
-<!-- Chat UI -->
-<div class="chat-container" style="position: fixed; bottom: 20px; right: 20px; width: 300px; background: white; padding: 10px; border-radius: 10px; box-shadow: 0 0 10px #ccc; z-index: 999;">
-  <div style="font-weight: bold; margin-bottom: 5px;">Crypto Daniel</div>
-  <div id="chat-box" style="height: 150px; overflow-y: auto; border: 1px solid #ccc; padding: 5px; margin-bottom: 5px;"></div>
-  <form id="chat-form">
-    <input id="user-input" type="text" placeholder="Ask me..." style="width: 100%; padding: 6px;" required>
-    <button type="submit" style="margin-top: 5px; width: 100%;">Send</button>
-  </form>
+<!-- Crypto Daniel AI Chatbot -->
+<div class="chat-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 999; background: #fff; border-radius: 12px; padding: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.3); width: 300px;">
+  <div class="chat-header" style="font-weight: bold; margin-bottom: 5px;">Crypto Daniel</div>
+  <div id="chat-box" style="height: 180px; overflow-y: auto; margin-bottom: 5px;"></div>
+  <div id="chat-form">
+    <input type="text" id="user-input" placeholder="Ask me anything..." style="width: 100%; padding: 8px;" />
+    <button id="send-btn" style="margin-top: 5px; width: 100%;">Send</button>
+  </div>
 </div>
-<!-- Voice button -->
-<button onclick="toggleVoice()" style="position: fixed; bottom: 20px; left: 20px; padding: 10px; background: #444; color: white; border-radius: 8px;"> Voice</button>
 
-st.markdown("""
+<button onclick="toggleVoice()" style="position: fixed; bottom: 20px; left: 20px; padding: 10px 16px; background: #444; color: #fff; border-radius: 8px; border: none; z-index: 1000;">🔊 Voice</button>
+
 <script>
   const userLang = navigator.language || navigator.userLanguage;
   let currentLang = userLang.startsWith("ro") ? "ro" : "en";
@@ -210,6 +210,7 @@ st.markdown("""
   };
 </script>
 """, unsafe_allow_html=True)
+
 
 
 
