@@ -13,16 +13,19 @@ def get_current_password():
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
-# Display password field if not authenticated
 if not st.session_state.authenticated:
     st.title("🔐 Enter Password to Access Dashboard")
     password = st.text_input("Password", type="password")
+    uploaded_file = st.file_uploader("Upload Payment Proof", type=["png", "jpg", "jpeg", "pdf"])
+    if uploaded_file:
+        st.success("✅ Payment proof received. You will receive your password shortly.")
     if st.button("Submit"):
         if password == get_current_password():
             st.session_state.authenticated = True
             st.rerun()
         else:
             st.error("Incorrect password.")
+
     st.stop()  # Stop here if not logged in
 
 # Theme switch
