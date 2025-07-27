@@ -170,12 +170,11 @@ st.markdown("""
   function getResponse(message) {
     const m = message.toLowerCase();
     if (m.includes("price")) return currentLang === "ro" ? "Basic: 19€/lună, Pro: 39€/lună." : "Basic: €19/month, Pro: €39/month.";
-    if (m.includes("signal")) return currentLang === "ro" ? "Semnalele vin zilnic la ora 20:00 EET." : "Signals come daily at 20:00 EET.";
+    if (m.includes("signal")) return currentLang === "ro" ? "Semnalele vin la ora 20:00 EET." : "Signals are sent at 20:00 EET.";
     if (m.includes("pay")) return currentLang === "ro"
       ? "<a href='https://checkout.revolut.com/pay/a1b9167e-f3c2-41b5-85f6-b9db57fd6efc' target='_blank'>Plătește Basic</a><br><a href='https://checkout.revolut.com/pay/b83947eb-463d-46b2-91af-6e1a44115e0a' target='_blank'>Plătește Pro</a>"
       : "<a href='https://checkout.revolut.com/pay/a1b9167e-f3c2-41b5-85f6-b9db57fd6efc' target='_blank'>Pay Basic</a><br><a href='https://checkout.revolut.com/pay/b83947eb-463d-46b2-91af-6e1a44115e0a' target='_blank'>Pay Pro</a>";
-    if (m.includes("password")) return currentLang === "ro" ? "După plata, primești parola valabilă 30 zile." : "After payment, you'll receive a password valid for 30 days.";
-    return currentLang === "ro" ? "Încă învăț. Poți reformula?" : "Still learning. Please rephrase.";
+    return currentLang === "ro" ? "Încă învăț. Poți reformula?" : "I'm still learning. Please rephrase.";
   }
 
   function speak(text) {
@@ -188,10 +187,9 @@ st.markdown("""
 
   function toggleVoice() {
     voiceEnabled = !voiceEnabled;
-    alert(voiceEnabled ? (currentLang === "ro" ? "Vocea este activă" : "Voice is active") : (currentLang === "ro" ? "Vocea este oprită" : "Voice is off"));
+    alert(voiceEnabled ? (currentLang === "ro" ? "Vocea activată" : "Voice enabled") : (currentLang === "ro" ? "Vocea dezactivată" : "Voice disabled"));
   }
 
-  // This ensures the DOM elements are always available and bound
   const observer = new MutationObserver(() => {
     const input = document.getElementById("user-input");
     const chatbox = document.getElementById("chat-box");
