@@ -3,23 +3,27 @@ import streamlit as st
 import pandas as pd
 import requests
 from datetime import datetime
+import streamlit.components.v1 as components
 
+# Utility to get the current valid monthly password
 def get_current_password():
-    now = datetime.now()
-    return f"RCU-{now.strftime('%B').upper()}-2025"
+    return f"RCU-{datetime.now().strftime('%B').upper()}-2025"
 
+# Initialize login state
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
+# Display password field if not authenticated
 if not st.session_state.authenticated:
     st.title("🔐 Enter Password to Access Dashboard")
     password = st.text_input("Password", type="password")
     if st.button("Submit"):
         if password == get_current_password():
             st.session_state.authenticated = True
-            st.rerun()
+            st.experimental_rerun()
         else:
             st.error("Incorrect password.")
+    st.stop()  # Stop here if not logged in
 
 # Theme switch
 mode = st.sidebar.radio("Theme Mode", [ "Light"])
