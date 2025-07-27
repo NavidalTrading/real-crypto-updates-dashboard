@@ -5,6 +5,8 @@ import requests
 from datetime import datetime
 import streamlit.components.v1 as components
 
+if "chat_initialized" not in st.session_state:
+    st.session_state.chat_initialized = False
 # Utility to get the current valid monthly password
 def get_current_password():
     return f"RCU-{datetime.now().strftime('%B').upper()}-2025"
