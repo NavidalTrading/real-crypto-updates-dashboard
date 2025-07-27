@@ -156,8 +156,9 @@ st.markdown("""
   <div class="chat-header" style="font-weight: bold; margin-bottom: 5px;">Crypto Daniel</div>
   <div id="chat-box" style="height: 180px; overflow-y: auto; margin-bottom: 5px;"></div>
   <div id="chat-form">
-    <input type="text" id="user-input" placeholder="Ask me anything..." style="width: 100%; padding: 8px;" />
-    <button id="send-btn" style="margin-top: 5px; width: 100%;">Send</button>
+   <input type="text" id="user-input" placeholder="Ask me anything..." style="width: 100%; padding: 6px;" />
+<button id="send-btn" style="width: 100%; margin-top: 5px;">Send</button>
+
   </div>
 </div>
 
