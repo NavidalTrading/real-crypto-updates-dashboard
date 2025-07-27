@@ -20,7 +20,7 @@ if not st.session_state.authenticated:
     if st.button("Submit"):
         if password == get_current_password():
             st.session_state.authenticated = True
-            st.experimental_rerun()
+            st.rerun()
         else:
             st.error("Incorrect password.")
     st.stop()  # Stop here if not logged in
