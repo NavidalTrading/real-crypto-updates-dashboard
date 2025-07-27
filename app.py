@@ -144,7 +144,7 @@ st.markdown("---")
 st.markdown("### ❓ Frequently Asked Questions")
 
 with st.expander("How do I get access to the dashboard?"):
-    st.markdown("After choosing a plan and completing payment via Revolut, upload your **payment proof** directly in the chat to Crypto Daniel.")
+    st.markdown("After choosing a plan and completing payment via Revolut, upload your **payment proof** directly on Dashboard start page in the upload section.")
 
 with st.expander("How long is the dashboard password valid?"):
     st.markdown("Once your payment is confirmed, you'll receive a password for the current month. The password is **valid for 30 days** and changes monthly.")
