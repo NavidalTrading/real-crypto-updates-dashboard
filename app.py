@@ -210,7 +210,6 @@ st.markdown("""
   }, 500); // Wait for DOM to fully render
 </script>
 """, unsafe_allow_html=True)
-import streamlit as st
 
 # Initialize chat history
 if "chat_history" not in st.session_state:
@@ -242,7 +241,7 @@ for chat in st.session_state.chat_history:
 if user_input:
     reply = get_reply(user_input)
     st.session_state.chat_history.append({"user": user_input, "bot": reply})
-    st.experimental_rerun()
+    st.rerun()
 
 
 
