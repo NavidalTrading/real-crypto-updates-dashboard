@@ -151,11 +151,9 @@ with st.expander("How long is the dashboard password valid?"):
 # Chatbot UI
 st.markdown("""
 <!-- Chat UI -->
-<div class="chat-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 999; background: white; border-radius: 10px; padding: 10px; width: 300px; box-shadow: 0 0 10px rgba(0,0,0,0.3);">
-  <div style="font-weight: bold; margin-bottom: 5px;">Crypto Daniel</div>
-  <div id="chat-box" style="height: 180px; overflow-y: auto; background: #f9f9f9; padding: 5px; margin-bottom: 5px;"></div>
-  <input type="text" id="user-input" placeholder="Ask me..." style="width: 100%; padding: 6px;" />
-  <button id="send-btn" type="button" style="width: 100%; margin-top: 5px;">Send</button>
+<div id="chat-form">
+  <input type="text" id="user-input" placeholder="Ask me anything..." style="width: 100%; padding: 8px;" required />
+  <button id="send-button" style="margin-top: 5px; width: 100%;" onclick="handleSubmit()">Send</button>
 </div>
 
 <script>
@@ -188,6 +186,21 @@ st.markdown("""
     utter.voice = synth.getVoices().find(v => v.name.includes("Male") || v.name.includes("Bărbat")) || synth.getVoices()[0];
     synth.speak(utter);
   }
+  function handleSubmit() {
+  const input = document.getElementById("user-input");
+  const chatbox = document.getElementById("chat-box");
+  const message = input.value.trim();
+
+  if (message) {
+    chatbox.innerHTML += `<div class='user'>${message}</div>`;
+    const reply = getResponse(message);
+    chatbox.innerHTML += `<div class='bot'>${reply}</div>`;
+    input.value = "";
+    chatbox.scrollTop = chatbox.scrollHeight;
+    if (voiceEnabled) speak(reply);
+  }
+}
+
 
   setTimeout(() => {
     const sendBtn = document.getElementById("send-btn");
