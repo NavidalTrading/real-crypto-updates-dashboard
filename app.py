@@ -150,64 +150,67 @@ with st.expander("How long is the dashboard password valid?"):
     st.markdown("Once your payment is confirmed, you'll receive a password for the current month. The password is **valid for 30 days** and changes monthly.")
 # Chatbot UI
 st.markdown("""
-<!-- Chat Container -->
+<!-- Chat UI -->
 <div class="chat-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 999; background: white; border-radius: 10px; padding: 10px; width: 300px; box-shadow: 0 0 10px rgba(0,0,0,0.3);">
   <div style="font-weight: bold; margin-bottom: 5px;">Crypto Daniel</div>
   <div id="chat-box" style="height: 180px; overflow-y: auto; background: #f9f9f9; padding: 5px; margin-bottom: 5px;"></div>
-  <input type="text" id="user-input" placeholder="Ask me..." style="width: 100%; padding: 6px;"/>
-  <button id="send-btn" style="width: 100%; margin-top: 5px;">Send</button>
+  <input type="text" id="user-input" placeholder="Ask me..." style="width: 100%; padding: 6px;" />
+  <button id="send-btn" type="button" style="width: 100%; margin-top: 5px;">Send</button>
 </div>
 
 <script>
-const userLang = navigator.language || navigator.userLanguage;
-const isRomanian = userLang.startsWith("ro");
-let currentLang = isRomanian ? "ro" : "en";
-let voiceEnabled = false;
-const synth = window.speechSynthesis;
+  const userLang = navigator.language || navigator.userLanguage;
+  const isRomanian = userLang.startsWith("ro");
+  let currentLang = isRomanian ? "ro" : "en";
+  let voiceEnabled = false;
+  const synth = window.speechSynthesis;
 
-function getResponse(message) {
-  const lower = message.toLowerCase();
-  if (lower.includes("price")) {
-    return currentLang === "ro" ? "Planul Basic este 19€/lună, iar Pro este 39€/lună." : "The Basic Plan is €19/month and the Pro Plan is €39/month.";
-  } else if (lower.includes("signal")) {
-    return currentLang === "ro" ? "Semnalele sunt publicate la 20:00 EET." : "Signals are posted at 20:00 EET.";
-  } else if (lower.includes("dashboard")) {
-    return currentLang === "ro" ? "Poți accesa dashboard-ul după ce introduci parola lunii." : "You can access the dashboard after entering the current month's password.";
-  } else if (lower.includes("pay") || lower.includes("buy")) {
-    return currentLang === "ro"
-      ? "<a href='https://checkout.revolut.com/pay/a1b9167e-f3c2-41b5-85f6-b9db57fd6efc' target='_blank'>Plătește Basic</a><br><a href='https://checkout.revolut.com/pay/b83947eb-463d-46b2-91af-6e1a44115e0a' target='_blank'>Plătește Pro</a>"
-      : "<a href='https://checkout.revolut.com/pay/a1b9167e-f3c2-41b5-85f6-b9db57fd6efc' target='_blank'>Pay Basic</a><br><a href='https://checkout.revolut.com/pay/b83947eb-463d-46b2-91af-6e1a44115e0a' target='_blank'>Pay Pro</a>";
-  } else {
-    return currentLang === "ro" ? "Încă învăț. Reformulează?" : "Still learning. Can you rephrase?";
-  }
-}
-
-function speak(text) {
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = currentLang === "ro" ? "ro-RO" : "en-US";
-  utter.voice = synth.getVoices().find(v => v.name.includes("Male") || v.name.includes("Bărbat")) || synth.getVoices()[0];
-  synth.speak(utter);
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  const sendBtn = document.getElementById("send-btn");
-  const input = document.getElementById("user-input");
-  const chatbox = document.getElementById("chat-box");
-
-  sendBtn.addEventListener("click", () => {
-    const message = input.value.trim();
-    if (message) {
-      chatbox.innerHTML += "<div class='user'><b>You:</b> " + message + "</div>";
-      const reply = getResponse(message);
-      chatbox.innerHTML += "<div class='bot'><b>Bot:</b> " + reply + "</div>";
-      input.value = "";
-      chatbox.scrollTop = chatbox.scrollHeight;
-      if (voiceEnabled) speak(reply);
+  function getResponse(message) {
+    const lower = message.toLowerCase();
+    if (lower.includes("price")) {
+      return currentLang === "ro" ? "Planul Basic este 19€/lună, iar Pro este 39€/lună." : "The Basic Plan is €19/month and the Pro Plan is €39/month.";
+    } else if (lower.includes("signal")) {
+      return currentLang === "ro" ? "Semnalele sunt publicate la 20:00 EET." : "Signals are posted at 20:00 EET.";
+    } else if (lower.includes("dashboard")) {
+      return currentLang === "ro" ? "Accesează dashboard-ul după ce introduci parola lunii." : "Access the dashboard after entering this month's password.";
+    } else if (lower.includes("pay") || lower.includes("buy")) {
+      return currentLang === "ro"
+        ? "<a href='https://checkout.revolut.com/pay/a1b9167e-f3c2-41b5-85f6-b9db57fd6efc' target='_blank'>Plătește Basic</a><br><a href='https://checkout.revolut.com/pay/b83947eb-463d-46b2-91af-6e1a44115e0a' target='_blank'>Plătește Pro</a>"
+        : "<a href='https://checkout.revolut.com/pay/a1b9167e-f3c2-41b5-85f6-b9db57fd6efc' target='_blank'>Pay Basic</a><br><a href='https://checkout.revolut.com/pay/b83947eb-463d-46b2-91af-6e1a44115e0a' target='_blank'>Pay Pro</a>";
+    } else {
+      return currentLang === "ro" ? "Încă învăț. Poți reformula?" : "I'm still learning. Can you rephrase?";
     }
-  });
-});
+  }
+
+  function speak(text) {
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = currentLang === "ro" ? "ro-RO" : "en-US";
+    utter.voice = synth.getVoices().find(v => v.name.includes("Male") || v.name.includes("Bărbat")) || synth.getVoices()[0];
+    synth.speak(utter);
+  }
+
+  setTimeout(() => {
+    const sendBtn = document.getElementById("send-btn");
+    const input = document.getElementById("user-input");
+    const chatbox = document.getElementById("chat-box");
+
+    if (sendBtn && input && chatbox) {
+      sendBtn.onclick = function () {
+        const message = input.value.trim();
+        if (message) {
+          chatbox.innerHTML += "<div><b>You:</b> " + message + "</div>";
+          const reply = getResponse(message);
+          chatbox.innerHTML += "<div><b>Daniel:</b> " + reply + "</div>";
+          input.value = "";
+          chatbox.scrollTop = chatbox.scrollHeight;
+          if (voiceEnabled) speak(reply);
+        }
+      };
+    }
+  }, 500); // Wait for DOM to fully render
 </script>
 """, unsafe_allow_html=True)
+
 
 
 
