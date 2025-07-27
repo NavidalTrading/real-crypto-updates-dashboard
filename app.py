@@ -183,4 +183,5 @@ st.markdown("""
     });
   });
 </script>
-""")
+
+""", unsafe_allow_html=True)
