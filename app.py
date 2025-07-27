@@ -148,7 +148,18 @@ with st.expander("How do I get access to the dashboard?"):
 
 with st.expander("How long is the dashboard password valid?"):
     st.markdown("Once your payment is confirmed, you'll receive a password for the current month. The password is **valid for 30 days** and changes monthly.")
+
+with st.expander("When are signals updated?"):
+    st.markdown("Signals are updated daily at 20:00 EET (Eastern European Time).")
+
+with st.expander("How do I access the dashboard?"):
+    st.markdown("The link can be found on our website at View Live Dashbord button located above the Plans&Pricing Section.")
+
+with st.expander("What coins are included?"):
+   st.markdown ("Major altcoins: XRP, ADA, QNT, CRV, FIL, EGLD, and more.")
+
 # Chatbot UI
+
 # Chatbot HTML container
 st.markdown("""
 <!-- Crypto Daniel AI Chatbot -->
