@@ -7,7 +7,7 @@ import streamlit.components.v1 as components
 
 # Initialize login state
 if "authenticated" not in st.session_state:
-    st.session_state.authenticated = False
+    st.session_state.authenticated = True
 
 if "auth_expiry" not in st.session_state:
     st.session_state["auth_expiry"] = None
