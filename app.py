@@ -4,20 +4,22 @@ import pandas as pd
 import requests
 from datetime import datetime
 
-# Password logic
-MONTHLY_PASSWORD = {
-    "july2025": "July2025VIP"
-}
-user_password = st.text_input("Enter your monthly password:", type="password")
-current_key = datetime.now().strftime("%B%Y").lower()
-valid_password = MONTHLY_PASSWORD.get(current_key, "invalid")
+def get_current_password():
+    now = datetime.now()
+    return f"RCU-{now.strftime('%B').upper()}-2025"
 
-if user_password != valid_password:
-    st.warning("Access Denied. Please enter a valid password.")
-    st.stop()
-else:
-    st.success("Access Granted.")
-    
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+
+if not st.session_state.authenticated:
+    st.title("🔐 Enter Password to Access Dashboard")
+    password = st.text_input("Password", type="password")
+    if st.button("Submit"):
+        if password == get_current_password():
+            st.session_state.authenticated = True
+            st.rerun()
+        else:
+            st.error("Incorrect password.")
 
 # Theme switch
 mode = st.sidebar.radio("Theme Mode", [ "Light"])
