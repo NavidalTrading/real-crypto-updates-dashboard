@@ -190,13 +190,14 @@ st.markdown("""
     alert(voiceEnabled ? (currentLang === "ro" ? "Vocea activată" : "Voice enabled") : (currentLang === "ro" ? "Vocea dezactivată" : "Voice disabled"));
   }
 
+  // ✅ Attach event handler after Streamlit loads UI
   const observer = new MutationObserver(() => {
     const input = document.getElementById("user-input");
     const chatbox = document.getElementById("chat-box");
     const sendBtn = document.getElementById("send-btn");
 
     if (input && chatbox && sendBtn && !sendBtn.dataset.bound) {
-      sendBtn.dataset.bound = "true";
+      sendBtn.dataset.bound = "true"; // Avoid rebinding
       sendBtn.addEventListener("click", () => {
         const msg = input.value.trim();
         if (!msg) return;
@@ -212,6 +213,7 @@ st.markdown("""
 
   observer.observe(document.body, { childList: true, subtree: true });
 </script>
+
 """, unsafe_allow_html=True)
 
 
