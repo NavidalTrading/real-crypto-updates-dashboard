@@ -122,6 +122,16 @@ st.markdown("""
 <a href='#'><button style='padding: 10px 20px; font-size: 16px; border-radius: 8px; background: #00cc99; color: white;'>Subscribe to get early access!</button></a>
 </div>
 """, unsafe_allow_html=True)
+st.markdown("""
+<form action="https://formspree.io/f/mldlbonw" method="POST" style="margin: 30px auto; max-width: 500px;">
+      <h3 style="color: white;">📬 Stay Updated</h3>
+      <input type="email" name="email" placeholder="Enter your email" required
+        style="padding: 10px; width: 70%; border-radius: 5px; border: none; margin-bottom: 10px;">
+      <br>
+      <button type="submit" class="subscribe-button">Join Email List</button>
+    </form>
+    </div>
+""", unsafe_allow_html=True)
 
 # Pricing
 st.markdown("""
