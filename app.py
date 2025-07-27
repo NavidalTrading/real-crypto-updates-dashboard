@@ -151,11 +151,14 @@ with st.expander("How long is the dashboard password valid?"):
 # Chatbot UI
 st.markdown("""
 <!-- Chat UI -->
-<div id="chat-form">
-  <input type="text" id="user-input" placeholder="Ask me anything..." style="width: 100%; padding: 8px;" required />
-  <button id="send-button" style="margin-top: 5px; width: 100%;" onclick="handleSubmit()">Send</button>
+<div class="chat-container" style="position: fixed; bottom: 20px; right: 20px; width: 300px; background: white; padding: 10px; border-radius: 10px; box-shadow: 0 0 10px #ccc; z-index: 999;">
+  <div style="font-weight: bold; margin-bottom: 5px;">Crypto Daniel</div>
+  <div id="chat-box" style="height: 150px; overflow-y: auto; border: 1px solid #ccc; padding: 5px; margin-bottom: 5px;"></div>
+  <form id="chat-form">
+    <input id="user-input" type="text" placeholder="Ask me..." style="width: 100%; padding: 6px;" required>
+    <button type="submit" style="margin-top: 5px; width: 100%;">Send</button>
+  </form>
 </div>
-
 <script>
   const userLang = navigator.language || navigator.userLanguage;
   const isRomanian = userLang.startsWith("ro");
