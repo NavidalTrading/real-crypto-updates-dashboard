@@ -13,7 +13,7 @@ client = Spot()  # Public data, no API key needed
 
 def fetch_ohlcv_binance(symbol, interval='1h', limit=100):
     try:
-        klines = client.get_klines(symbol=symbol, interval=interval, limit=limit)
+        klines = client.klines(symbol=symbol, interval=interval, limit=limit)
         df = pd.DataFrame(klines, columns=[
             'timestamp', 'open', 'high', 'low', 'close', 'volume',
             'close_time', 'quote_asset_volume', 'number_of_trades',
