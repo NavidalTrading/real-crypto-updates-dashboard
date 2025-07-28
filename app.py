@@ -237,18 +237,17 @@ for sym in symbols:
 basic_symbols = ["XRPUSDT", "CRVUSDT", "FILUSDT", "EGLDUSDT"]
 pro_symbols = ["BTCUSDT", "ETHUSDT", "XRPUSDT", "ADAUSDT", "QNTUSDT", "CRVUSDT", "FILUSDT", "EGLDUSDT"]
 
-if st.session_state.plan == "Basic":
+if st.session_state.get("user_plan") == "Basic Plan":
     st.subheader("📊 Real-Time Crypto Signals (Basic Plan)")
     signal_df = generate_signals(basic_symbols)
     signal_df.index = signal_df.index + 1
     st.dataframe(signal_df, use_container_width=True)
 
-elif st.session_state.plan == "Pro":
+elif st.session_state.get("user_plan") == "Pro Plan":
     st.subheader("📊 Real-Time Crypto Signals (Pro Plan)")
-    signal_df = generate_signals(basic_symbols + pro_symbols)
+    signal_df = generate_signals(pro_symbols)
     signal_df.index = signal_df.index + 1
     st.dataframe(signal_df, use_container_width=True)
-
 
 
 # ✅ Add this immediately after definition
