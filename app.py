@@ -20,42 +20,39 @@ symbol_map = {
 
 CMC_API_KEY = "c75c8f96-f121-46bf-82f7-5dab19eced12"  # <-- Paste your API key here
 
-def fetch_ohlcv_coinmarketcap(slug, interval='1h'):
+def fetch_ohlcv_coinmarketcap(symbol):
     try:
-        url = f"https://pro-api.coinmarketcap.com/v1/cryptocurrency/ohlcv/historical"
-        params = {
-            'symbol': slug, 
-            'interval': interval,
-            'time_start': (datetime.now() - pd.Timedelta(days=1)).strftime('%Y-%m-%d'),
-            'time_end': datetime.now().strftime('%Y-%m-%d'),
-        }
         headers = {
             'Accepts': 'application/json',
             'X-CMC_PRO_API_KEY': CMC_API_KEY,
         }
-
+        url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/ohlcv/historical'
+        params = {
+            'symbol': symbol,  # Already mapped correctly like 'XRP'
+            'interval': '1h',
+            'time_start': start_date,
+            'time_end': end_date
+        }
         response = requests.get(url, headers=headers, params=params)
         response.raise_for_status()
-        data = response.json()['data']['quotes']
+        data = response.json()
 
-        df = pd.DataFrame(data)
-        df['timestamp'] = pd.to_datetime(df['time_open'])
+        prices = data['data']['quotes']
+        df = pd.DataFrame([{
+            'timestamp': pd.to_datetime(q['timestamp']),
+            'open': q['quote']['USD']['open'],
+            'high': q['quote']['USD']['high'],
+            'low': q['quote']['USD']['low'],
+            'close': q['quote']['USD']['close'],
+            'volume': q['quote']['USD']['volume'],
+        } for q in prices])
+
         df.set_index('timestamp', inplace=True)
-        df = df.rename(columns={
-            'quote': 'usd',
-            'time_close': 'close_time',
-            'volume': 'volume'
-        })
-        df['open'] = df['usd'].apply(lambda x: x['open'])
-        df['high'] = df['usd'].apply(lambda x: x['high'])
-        df['low'] = df['usd'].apply(lambda x: x['low'])
-        df['close'] = df['usd'].apply(lambda x: x['close'])
-        df['volume'] = df['usd'].apply(lambda x: x['volume'])
-        return df[['open', 'high', 'low', 'close', 'volume']]
-
+        return df
     except Exception as e:
-        st.error(f"⚠️ Error for {symbol} ({cg_symbol}): {e}")
+        st.error(f"⚠️ Error for {symbol}: {e}")
         return None
+
 
 
 def ichimoku_signal(df):
