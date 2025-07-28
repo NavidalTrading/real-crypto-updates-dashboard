@@ -23,63 +23,44 @@ def extract_plan_from_filename(filename):
 def password_gate():
     st.title("🔒 Enter Password to Access Dashboard")
 
+    # Upload file
+    uploaded_file = st.file_uploader("Upload Payment Proof", type=["png", "jpg", "jpeg", "pdf"], key="payment_upload")
 
-    # Process uploaded proof file
     if uploaded_file:
-        st.success("🧾 Crypto Daniel verified your Basic Plan payment proof.")
-        st.info("Your password for July is: `realcrypto-july`\n\nAccess valid for 30 days.")
-        # You can also set this password in session:
-        st.session_state.valid_password = "realcrypto-july"
+        filename = uploaded_file.name.lower()
+        current_month = datetime.datetime.now().strftime("%B").lower()
+        plan_type = ""
 
+        if "pro" in filename:
+            plan_type = "Pro Plan"
+            password = f"realcrypto-pro-{current_month}"
+        elif "basic" in filename:
+            plan_type = "Basic Plan"
+            password = f"realcrypto-basic-{current_month}"
+        else:
+            st.error("❌ Could not determine plan from filename. Use 'basic' or 'pro' in the name.")
+            return
+
+        # Store valid password and plan type in session
+        st.session_state.valid_password = password
+        st.session_state.user_plan = plan_type
+
+        st.success(f"✅ Crypto Daniel verified your **{plan_type}** payment proof.")
+        st.info(f"Your password for **{current_month.capitalize()}** is: `{password}`\n\nAccess valid for 30 days.")
+
+    # Show password input only if access not yet granted
     if "access_granted" not in st.session_state:
         st.session_state.access_granted = False
 
-    if st.session_state.access_granted:
-        return  # Skip login if already granted
-
-    password = st.text_input("Password", type="password")
-    if st.button("Submit"):
-        if password == st.session_state.get("valid_password"):
-            st.session_state.access_granted = True
-            st.rerun()
-        else:
-            st.error("Incorrect password.")
-
-   
-
-if "uploaded_file" not in st.session_state:
-    st.session_state["uploaded_file"] = None
-    
-    uploaded_file = st.file_uploader("Upload Payment Proof", type=["png", "jpg", "jpeg", "pdf"], key="payment_upload")
-
-if uploaded_file:
-    file_name = uploaded_file.name.lower()
-
-    if "basic" in file_name:
-        st.success("✅ Crypto Daniel verified your **Basic Plan** payment proof.")
-        st.info(f"Your password for **July** is: `realcrypto-july` Access valid for 30 days.")
-        st.session_state["plan"] = "basic"
-
-    elif "pro" in file_name:
-        st.success("✅ Crypto Daniel verified your **Pro Plan** payment proof.")
-        st.info(f"Your password for **July** is: `procrypto-july` Access valid for 30 days.")
-        st.session_state["plan"] = "pro"
-   
-    else:
-            st.warning("❌ Unable to verify payment.")
-         # ✅ Prevent duplicate output
-    st.session_state['uploaded_file'] = None
-
-    password = st.text_input("Password", type="password")
-    if st.button("Submit"):
-        expected_password = f"realcrypto-{datetime.now().strftime('%B').lower()}"
-        if password == expected_password:
-            st.session_state["authenticated"] = True
-            st.session_state["auth_expiry"] = datetime.now() + timedelta(days=30)
-            st.success("✅ Access granted. Welcome!")
-            st.rerun()
-        else:
-            st.error("❌ Incorrect password.")
+    if not st.session_state.access_granted:
+        password = st.text_input("Password", type="password")
+        if st.button("Submit"):
+            if password == st.session_state.get("valid_password", ""):
+                st.session_state.access_granted = True
+                st.success("✅ Access granted.")
+                st.rerun()
+            else:
+                st.error("❌ Incorrect password.")
 
 # Re-check validity
 if st.session_state["authenticated"]:
