@@ -24,22 +24,23 @@ def password_gate():
     st.title("🔐 Enter Password to Access Dashboard")
     uploaded_file = st.file_uploader("Upload Payment Proof", type=["png", "jpg", "jpeg", "pdf"])
 
-    if uploaded_file:
-        plan = extract_plan_from_filename(uploaded_file.name)
-        current_month = datetime.now().strftime("%B").lower()
-        expected_password = f"realcrypto-{current_month}"
-        if plan:
-            st.success(f"✅ Crypto Daniel verified your **{plan} Plan** payment proof.")
-            st.session_state["authenticated"] = True
-            st.session_state["auth_expiry"] = datetime.now() + timedelta(days=30)
-            st.info(f"Your password for **{current_month.capitalize()}** is: `{expected_password}` Access valid for 30 days.")
-            st.session_state["user_plan"] = plan
-            st.success(f"✅ Crypto Daniel verified your **{plan} Plan** payment proof.")
-            st.session_state["authenticated"] = True
-            st.session_state["auth_expiry"] = datetime.now() + timedelta(days=30)
-            st.info(f"Your password for **{current_month.capitalize()}** is: `{expected_password}` Access valid for 30 days.")
-        else:
+   if uploaded_file:
+    file_name = uploaded_file.name.lower()
+
+    if "basic" in file_name:
+        st.success("✅ Crypto Daniel verified your **Basic Plan** payment proof.")
+        st.info(f"Your password for **July** is: `realcrypto-july` Access valid for 30 days.")
+        st.session_state["plan"] = "basic"
+
+    elif "pro" in file_name:
+        st.success("✅ Crypto Daniel verified your **Pro Plan** payment proof.")
+        st.info(f"Your password for **July** is: `procrypto-july` Access valid for 30 days.")
+        st.session_state["plan"] = "pro"
+   
+    else:
             st.warning("❌ Unable to verify payment.")
+         # ✅ Prevent duplicate output
+    st.session_state['uploaded_file'] = None
 
     password = st.text_input("Password", type="password")
     if st.button("Submit"):
