@@ -12,41 +12,50 @@ symbol_map = {
     'XRPUSDC': 'ripple',
     'CRVUSDC': 'curve-dao-token',
     'FILUSDC': 'filecoin',
-    'EGLDUSDC': 'elrond-erd-2'
-    }
+    'EGLDUSDC': 'multiversx',
+    'BTCUSDC': 'bitcoin',
+    'ETHUSDC': 'ethereum',
+    'ADAUSDC': 'cardano',
+    'QNTUSDC': 'quant'
+}
+CMC_API_KEY = "c75c8f96-f121-46bf-82f7-5dab19eced12"  # <-- Paste your API key here
 
-def fetch_ohlcv_coingecko(symbol, vs_currency='usd', days='1'):
+def fetch_ohlcv_coinmarketcap(slug, interval='1h'):
     try:
-        url = f"https://api.coingecko.com/api/v3/coins/{symbol.lower()}/market_chart"
+        url = f"https://pro-api.coinmarketcap.com/v1/cryptocurrency/ohlcv/historical"
         params = {
-            'vs_currency': vs_currency,
-            'days': days,
-            'interval': 'hourly'
+            'symbol': slug.upper(),  # CoinMarketCap accepts symbol, not slug
+            'interval': interval,
+            'time_start': (datetime.now() - pd.Timedelta(days=1)).strftime('%Y-%m-%d'),
+            'time_end': datetime.now().strftime('%Y-%m-%d'),
         }
         headers = {
-            "User-Agent": "Mozilla/5.0"
+            'Accepts': 'application/json',
+            'X-CMC_PRO_API_KEY': CMC_API_KEY,
         }
-        response = requests.get(url, params=params, headers=headers)
+
+        response = requests.get(url, headers=headers, params=params)
         response.raise_for_status()
-        time.sleep(1.5)  # prevent rate limit errors
+        data = response.json()['data']['quotes']
 
-        data = response.json()
-        prices = data['prices']
-        df = pd.DataFrame(prices, columns=['timestamp', 'price'])
-        df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
+        df = pd.DataFrame(data)
+        df['timestamp'] = pd.to_datetime(df['time_open'])
         df.set_index('timestamp', inplace=True)
-
-        df['open'] = df['price']
-        df['high'] = df['price']
-        df['low'] = df['price']
-        df['close'] = df['price']
-        df['volume'] = 1000  # dummy volume
+        df = df.rename(columns={
+            'quote': 'usd',
+            'time_close': 'close_time',
+            'volume': 'volume'
+        })
+        df['open'] = df['usd'].apply(lambda x: x['open'])
+        df['high'] = df['usd'].apply(lambda x: x['high'])
+        df['low'] = df['usd'].apply(lambda x: x['low'])
+        df['close'] = df['usd'].apply(lambda x: x['close'])
+        df['volume'] = df['usd'].apply(lambda x: x['volume'])
         return df[['open', 'high', 'low', 'close', 'volume']]
 
     except Exception as e:
-        st.error(f"Error fetching data for {symbol.upper()}: {e}")
+        st.error(f"⚠️ Error fetching data for {slug}: {e}")
         return None
-
 
 
 def ichimoku_signal(df):
@@ -200,7 +209,7 @@ def generate_signals(symbols):
         cg_symbol = symbol_map.get(symbol, "")
         if cg_symbol:
             try:
-                df = fetch_ohlcv_coingecko(cg_symbol)
+                df = fetch_ohlcv_coinmarketcap(symbol)
                 if df is None or len(df) < 52:
                     raise Exception("Insufficient data")
 
