@@ -47,7 +47,7 @@ def password_gate():
         st.session_state.user_plan = plan_type
 
         st.success(f"✅ Crypto Daniel verified your **{plan_type}** payment proof.")
-        st.info(f"Your password for **{current_month.capitalize()}** is: `{password}`Access valid for 30 days.")
+        st.info(f"Your password for **{current_month.capitalize()}** is: `{password}` Access valid for 30 days.")
 
     # Show password input only if access not yet granted
     if "access_granted" not in st.session_state:
