@@ -8,12 +8,12 @@ import numpy as np
 from binance.client import Client
 from binance.spot import Spot
 
-client = Spot()  # No API key needed for public data
+client = Spot()  # Public data, no API key needed
 
 
 def fetch_ohlcv_binance(symbol, interval="1h", limit=100):
     try:
-        raw = client.klines(symbol, interval, limit=limit)
+        raw = client.klines(symbol.replace("/", ""), interval, limit=limit)
         df = pd.DataFrame(raw, columns=[
             "timestamp", "open", "high", "low", "close", "volume",
             "close_time", "quote_asset_volume", "number_of_trades",
@@ -26,6 +26,7 @@ def fetch_ohlcv_binance(symbol, interval="1h", limit=100):
     except Exception as e:
         print(f"❌ Failed to fetch {symbol}: {e}")
         return None
+
 
 
 
@@ -84,23 +85,6 @@ def pivot_play_signal(df):
         return "SELL"
     return "HOLD"
 
-def fetch_klines(symbol, interval='1h', limit=150):
-    klines = client.get_klines(symbol=symbol, interval=interval, limit=limit)
-    try:
-        response = requests.get(url)
-        data = response.json()
-        df = pd.DataFrame(data, columns=[
-            'timestamp', 'open', 'high', 'low', 'close', 'volume',
-            'close_time', 'quote_asset_volume', 'number_of_trades',
-            'taker_buy_base_volume', 'taker_buy_quote_volume', 'ignore'
-        ])
-        df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
-        df.set_index('timestamp', inplace=True)
-        df = df[['open', 'high', 'low', 'close']].astype(float)
-        return df
-    except:
-        return None
-
 def ichimoku_cloud(df):
     high_9 = df['high'].rolling(window=9).max()
     low_9 = df['low'].rolling(window=9).min()
@@ -122,7 +106,7 @@ def generate_signals(symbols):
    def fetch_klines(symbol, interval='1h', limit=150):
     klines = client.get_klines(symbol=symbol, interval=interval, limit=limit)
     try:
-        response = requests.get(url)
+        response = requests.get()
         data = response.json()
         df = pd.DataFrame(data, columns=[
             'timestamp', 'open', 'high', 'low', 'close', 'volume',
@@ -181,7 +165,7 @@ def generate_signals(symbols):
             leverage = "x10"
 
             results.append([
-                pair.replace("USDC", "/USDC"),
+                pair.replace("USDC", "USDC"),
                 round(entry_price, 4),
                 f"{tp} / {sl}",
                 leverage,
@@ -190,7 +174,7 @@ def generate_signals(symbols):
 
         except Exception as e:
             results.append([
-                pair.replace("USDC", "/USDC"),
+                pair.replace("USDC", "USDC"),
                 "-",
                 "-",
                 "-",
