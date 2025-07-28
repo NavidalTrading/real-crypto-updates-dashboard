@@ -6,6 +6,11 @@ from datetime import datetime
 import streamlit.components.v1 as components
 import numpy as np
 import time
+from datetime import datetime, timedelta 
+
+# Define start and end dates for CoinMarketCap API
+end_date = datetime.utcnow()
+start_date = end_date - timedelta(days=1)
 
 symbol_map = {
     'XRP': 'XRP',
