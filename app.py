@@ -137,9 +137,22 @@ for sym in symbols:
     display_pair = pair_used if pair_used else f"{sym}/N/A"
     data.append([display_pair, "Coming Soon", price, "-5%", "+10%"])
 
-df = pd.DataFrame(data, columns=["Pair", "Signal", "Price", "Stop Loss", "Take Profit"])
-signal_df.index = signal_df.index + 1  # Make index start from 1 instead of 0
-st.dataframe(df, use_container_width=True)
+# Example: Define your table here
+signal_df = pd.DataFrame({
+    "Pair": ["BTC/USDT", "ETH/USDT"],
+    "Signal": ["BUY", "SELL"],
+    "Leverage": ["10x", "20x"],
+    "Entry": [30000, 1800],
+    "SL": [29000, 1750],
+    "TP": [32000, 2000]
+})
+
+# ✅ Add this immediately after definition
+signal_df.index = signal_df.index + 1
+
+# ✅ Then display
+st.subheader("📊 Real-Time Crypto Signals")
+st.dataframe(signal_df, use_container_width=True)
 
 # Auto-Trader
 st.markdown("""
