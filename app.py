@@ -120,9 +120,10 @@ def ichimoku_cloud(df):
     return tenkan_sen, kijun_sen, senkou_span_a, senkou_span_b
 
 def generate_signals(symbols):
+    def generate_signals(symbols):
     results = []
     for symbol in symbols:
-        pair = symbol.replace("/", "")
+        pair = symbol.replace("/", "")  # convert XRP/USDC to XRPUSDC
         try:
             df = fetch_ohlcv_binance(pair, interval="1h", limit=52)
             if df is None or len(df) < 52:
