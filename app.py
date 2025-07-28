@@ -246,6 +246,7 @@ for sym in symbols:
 basic_symbols = ["XRPUSDT", "CRVUSDT", "FILUSDT", "EGLDUSDT"]
 pro_symbols = ["BTCUSDT", "ETHUSDT", "XRPUSDT", "ADAUSDT", "QNTUSDT", "CRVUSDT", "FILUSDT", "EGLDUSDT"]
 
+# Display signals with new columns
 if st.session_state.get("user_plan") == "Basic Plan":
     st.subheader("📊 Real-Time Crypto Signals (Basic Plan)")
     signal_df = generate_signals(basic_symbols)
