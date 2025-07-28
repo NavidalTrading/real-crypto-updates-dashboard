@@ -75,11 +75,42 @@ def pivot_play_signal(df):
         return "SELL"
     return "HOLD"
 
-import pandas as pd
-import numpy as np
-import requests
-
 def fetch_klines(symbol, interval='1h', limit=150):
+    url = f'https://api.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit={limit}'
+    try:
+        response = requests.get(url)
+        data = response.json()
+        df = pd.DataFrame(data, columns=[
+            'timestamp', 'open', 'high', 'low', 'close', 'volume',
+            'close_time', 'quote_asset_volume', 'number_of_trades',
+            'taker_buy_base_volume', 'taker_buy_quote_volume', 'ignore'
+        ])
+        df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
+        df.set_index('timestamp', inplace=True)
+        df = df[['open', 'high', 'low', 'close']].astype(float)
+        return df
+    except:
+        return None
+
+def ichimoku_cloud(df):
+    high_9 = df['high'].rolling(window=9).max()
+    low_9 = df['low'].rolling(window=9).min()
+    tenkan_sen = (high_9 + low_9) / 2
+
+    high_26 = df['high'].rolling(window=26).max()
+    low_26 = df['low'].rolling(window=26).min()
+    kijun_sen = (high_26 + low_26) / 2
+
+    senkou_span_a = ((tenkan_sen + kijun_sen) / 2).shift(26)
+
+    high_52 = df['high'].rolling(window=52).max()
+    low_52 = df['low'].rolling(window=52).min()
+    senkou_span_b = ((high_52 + low_52) / 2).shift(26)
+
+    return tenkan_sen, kijun_sen, senkou_span_a, senkou_span_b
+
+def generate_signals(symbols):
+   def fetch_klines(symbol, interval='1h', limit=150):
     url = f'https://api.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit={limit}'
     try:
         response = requests.get(url)
