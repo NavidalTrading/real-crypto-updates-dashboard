@@ -22,7 +22,8 @@ def extract_plan_from_filename(filename):
  
 def password_gate():
     st.title("🔐 Enter Password to Access Dashboard")
-    uploaded_file = st.file_uploader("Upload Payment Proof", type=["png", "jpg", "jpeg", "pdf"])
+   uploaded_file = st.file_uploader("Upload Payment Proof", type=["png", "jpg", "jpeg", "pdf"], key="payment_upload")
+
 
 if "uploaded_file" not in st.session_state:
     st.session_state["uploaded_file"] = None
