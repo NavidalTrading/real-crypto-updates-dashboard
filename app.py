@@ -13,20 +13,22 @@ binance_api_secret = "XXqpVtqzK0H5yULxBo73TdG8Do74SsvxGzzo0VYp7MBrQHNq96MIZOUueL
 
 client = Client(api_key=binance_api_key, api_secret=binance_api_secret)
 
+def fetch_ohlcv_binance(symbol, interval="1h", limit=100):
+    try:
+        klines = client.get_klines(symbol=symbol, interval=interval, limit=limit)
+        df = pd.DataFrame(klines, columns=[
+            "timestamp", "open", "high", "low", "close", "volume",
+            "close_time", "quote_asset_volume", "number_of_trades",
+            "taker_buy_base_volume", "taker_buy_quote_volume", "ignore"
+        ])
+        df["timestamp"] = pd.to_datetime(df["timestamp"], unit="ms")
+        df.set_index("timestamp", inplace=True)
+        df = df[["open", "high", "low", "close", "volume"]].astype(float)
+        return df
+    except Exception as e:
+        print(f"Error fetching data for {symbol}: {e}")
+        return None
 
-def fetch_ohlcv_binance(symbol="BTCUSDT", interval="1h", limit=100):
-    klines = client.get_klines symbol={symbol}&interval={interval}&limit={limit}"
-    data = requests.get(url).json()
-    df = pd.DataFrame(data, columns=[
-        "timestamp", "open", "high", "low", "close", "volume",
-        "close_time", "quote_asset_volume", "number_of_trades",
-        "taker_buy_base_volume", "taker_buy_quote_volume", "ignore"
-    ])
-    df["close"] = df["close"].astype(float)
-    df["high"] = df["high"].astype(float)
-    df["low"] = df["low"].astype(float)
-    df["timestamp"] = pd.to_datetime(df["timestamp"], unit="ms")
-    return df
 
 def ichimoku_signal(df):
     high_9 = df["high"].rolling(window=9).max()
