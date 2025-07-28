@@ -4,6 +4,102 @@ import pandas as pd
 import requests
 from datetime import datetime
 import streamlit.components.v1 as components
+import numpy as np
+
+def fetch_ohlcv_binance(symbol="BTCUSDT", interval="1h", limit=100):
+    url = f"https://api.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit={limit}"
+    data = requests.get(url).json()
+    df = pd.DataFrame(data, columns=[
+        "timestamp", "open", "high", "low", "close", "volume",
+        "close_time", "quote_asset_volume", "number_of_trades",
+        "taker_buy_base_volume", "taker_buy_quote_volume", "ignore"
+    ])
+    df["close"] = df["close"].astype(float)
+    df["high"] = df["high"].astype(float)
+    df["low"] = df["low"].astype(float)
+    df["timestamp"] = pd.to_datetime(df["timestamp"], unit="ms")
+    return df
+
+def ichimoku_signal(df):
+    high_9 = df["high"].rolling(window=9).max()
+    low_9 = df["low"].rolling(window=9).min()
+    tenkan_sen = (high_9 + low_9) / 2
+
+    high_26 = df["high"].rolling(window=26).max()
+    low_26 = df["low"].rolling(window=26).min()
+    kijun_sen = (high_26 + low_26) / 2
+
+    chikou_span = df["close"].shift(-26)
+
+    if (
+        df["close"].iloc[-1] > kijun_sen.iloc[-1]
+        and tenkan_sen.iloc[-1] > kijun_sen.iloc[-1]
+        and chikou_span.iloc[-27] < df["close"].iloc[-27]
+    ):
+        return "BUY"
+    elif (
+        df["close"].iloc[-1] < kijun_sen.iloc[-1]
+        and tenkan_sen.iloc[-1] < kijun_sen.iloc[-1]
+        and chikou_span.iloc[-27] > df["close"].iloc[-27]
+    ):
+        return "SELL"
+    else:
+        return "HOLD"
+
+def pivot_levels(df):
+    last_candle = df.iloc[-2]
+    high = last_candle["high"]
+    low = last_candle["low"]
+    close = last_candle["close"]
+
+    pivot = (high + low + close) / 3
+    r1 = (2 * pivot) - low
+    s1 = (2 * pivot) - high
+    r2 = pivot + (high - low)
+    s2 = pivot - (high - low)
+
+    return {
+        "pivot": round(pivot, 2),
+        "r1": round(r1, 2),
+        "s1": round(s1, 2),
+        "r2": round(r2, 2),
+        "s2": round(s2, 2)
+    }
+
+def pivot_play_signal(df):
+    levels = pivot_levels(df)
+    current_close = df["close"].iloc[-1]
+    if current_close > levels["r1"]:
+        return "BUY"
+    elif current_close < levels["s1"]:
+        return "SELL"
+    return "HOLD"
+
+def generate_signals(symbols):
+    signals = []
+    for sym in symbols:
+        try:
+            df = fetch_ohlcv_binance(sym)
+            ichimoku = ichimoku_signal(df)
+            pivot = pivot_play_signal(df)
+
+            if ichimoku == pivot and ichimoku != "HOLD":
+                final_signal = ichimoku
+            else:
+                final_signal = "HOLD"
+
+            signals.append({
+                "Pair": sym.replace("USDT", "/USDT"),
+                "Signal": final_signal
+            })
+        except:
+            signals.append({
+                "Pair": sym.replace("USDT", "/USDT"),
+                "Signal": "Error fetching"
+            })
+
+    return pd.DataFrame(signals)
+
 
 # Initialize login state
 if "authenticated" not in st.session_state:
