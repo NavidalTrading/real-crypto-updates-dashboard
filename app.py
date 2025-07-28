@@ -122,7 +122,7 @@ def ichimoku_cloud(df):
 def generate_signals(symbols):
     results = []
     for symbol in symbols:
-        pair = symbol if "USDC" in symbol else symbol + "USDC"
+        pair = symbol.replace("/", "")
         try:
             df = fetch_ohlcv_binance(pair, interval="1h", limit=52)
             if df is None or len(df) < 52:
