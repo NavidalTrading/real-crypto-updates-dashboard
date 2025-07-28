@@ -40,8 +40,6 @@ def fetch_ohlcv_coinmarketcap(symbol):
             "time_end": end_date.isoformat()
         }
 
-response = requests.get(url, headers=headers, params=params)
-
         response = requests.get(url, headers=headers, params=params)
         response.raise_for_status()
         data = response.json()
