@@ -70,9 +70,9 @@ if st.session_state["authenticated"]:
         st.rerun()
 
 # Enforce gate
-if not st.session_state.get("authenticated", False):
+if not st.session_state.get("access_granted", False):
     password_gate()
-    st.stop()  # Only stop if password not yet provided
+    st.stop()# Only stop if password not yet provided
 
 
 # Theme switch
