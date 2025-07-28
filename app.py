@@ -8,8 +8,8 @@ import numpy as np
 from binance.client import Client
 
 # ⛔️ Replace these with your real Binance API credentials!
-binance_api_key = "0t1eJgf1brdzfm1z7UXabWjcUh5ufahsNtTnyJAoE2x8NJ0uHH47qX7I4Vw9bQGd"
-binance_api_secret = "DhdoZucnwKmOFh9AK16c1GUjxuC1O9wQAyDcDsVQpCaG8YtUYpbxS0apNjaWUObW"
+binance_api_key = "..."
+binance_api_secret = "..."
 
 client = Client(api_key=binance_api_key, api_secret=binance_api_secret)
 
