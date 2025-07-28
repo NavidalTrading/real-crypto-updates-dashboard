@@ -23,7 +23,8 @@ symbol_map = {
     'QNT': 'QNT'
 }
 
-CMC_API_KEY = "c75c8f96-f121-46bf-82f7-5dab19eced12"  # <-- Paste your API key here
+CMC_API_KEY = "c75c8f96-f121-46bf-82f7-5dab19eced12"
+
 
 def fetch_ohlcv_coinmarketcap(symbol):
     try:
@@ -31,13 +32,16 @@ def fetch_ohlcv_coinmarketcap(symbol):
             'Accepts': 'application/json',
             'X-CMC_PRO_API_KEY': CMC_API_KEY,
         }
-        url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/ohlcv/historical'
-        params = {
-            'symbol': symbol,  # Already mapped correctly like 'XRP'
-            'interval': '1h',
-            'time_start': start_date,
-            'time_end': end_date
-        }
+        url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/ohlcv/historical"
+params = {
+    "symbol": symbol,
+    "convert": "USD",
+    "time_start": start_date.isoformat(),
+    "time_end": end_date.isoformat()
+}
+
+response = requests.get(url, headers=headers, params=params)
+
         response = requests.get(url, headers=headers, params=params)
         response.raise_for_status()
         data = response.json()
