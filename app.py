@@ -86,7 +86,7 @@ def pivot_play_signal(df):
     return "HOLD"
 
 def fetch_klines(symbol, interval='1h', limit=150):
-    klines = client.get_klines(symbol={symbol}&interval={interval}&limit={limit}'
+    klines = client.get_klines(symbol=symbol, interval=interval, limit=limit)
     try:
         response = requests.get(url)
         data = response.json()
@@ -121,7 +121,7 @@ def ichimoku_cloud(df):
 
 def generate_signals(symbols):
    def fetch_klines(symbol, interval='1h', limit=150):
-    klines = client.get_klines(symbol={symbol}&interval={interval}&limit={limit}'
+    klines = client.get_klines(symbol=symbol, interval=interval, limit=limit)
     try:
         response = requests.get(url)
         data = response.json()
@@ -182,7 +182,7 @@ def generate_signals(symbols):
             leverage = "x10"
 
             results.append([
-                pair.replace("USDT", "/USDT"),
+                pair.replace("USDC", "/USDC"),
                 round(entry_price, 4),
                 f"{tp} / {sl}",
                 leverage,
