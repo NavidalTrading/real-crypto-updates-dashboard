@@ -151,6 +151,8 @@ def generate_signals(symbols):
             if df is None or len(df) < 52:
                 raise Exception("Insufficient data")
 
+            df = calculate_ichimoku(df)  # ✅ Add this to get required columns
+
             ichimoku = ichimoku_signal(df)
             pivot = pivot_play_signal(df)
 
@@ -170,7 +172,7 @@ def generate_signals(symbols):
             leverage = "x10"
 
             results.append([
-                pair.replace("USDC", "USDC"),
+                symbol,
                 round(entry_price, 4),
                 f"{tp} / {sl}",
                 leverage,
@@ -178,8 +180,9 @@ def generate_signals(symbols):
             ])
 
         except Exception as e:
+            print(f"⚠️ Error for {symbol}: {e}")
             results.append([
-                pair.replace("USDC", "USDC"),
+                symbol,
                 "-",
                 "-",
                 "-",
@@ -187,6 +190,7 @@ def generate_signals(symbols):
             ])
 
     return pd.DataFrame(results, columns=["Symbol", "Entry Price", "TP / SL", "Leverage", "Signal"])
+
 
 
 # Initialize login state
