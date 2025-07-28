@@ -247,7 +247,7 @@ def generate_signals(symbols):
     return pd.DataFrame(results, columns=["Symbol", "Entry Price", "TP / SL", "Leverage", "Signal"])
 
             # Combine both signals
-            if ichimoku == "BUY" and pivot == "BUY":
+        if ichimoku == "BUY" and pivot == "BUY":
                 final_signal = "STRONG BUY"
             elif ichimoku == "SELL" and pivot == "SELL":
                 final_signal = "STRONG SELL"
