@@ -246,43 +246,6 @@ def generate_signals(symbols):
 
     return pd.DataFrame(results, columns=["Symbol", "Entry Price", "TP / SL", "Leverage", "Signal"])
 
-            # Combine both signals
-                if ichimoku == "BUY" and pivot == "BUY":
-                final_signal = "STRONG BUY"
-                elif ichimoku == "SELL" and pivot == "SELL":
-                final_signal = "STRONG SELL"
-                elif ichimoku == "HOLD" or pivot == "HOLD":
-                final_signal = "HOLD"
-                else:
-                final_signal = "MIXED"
-
-            entry_price = df["close"].iloc[-1]
-            tp = round(entry_price * 1.10, 4)
-            sl = round(entry_price * 0.95, 4)
-            leverage = "x10"
-
-            results.append([
-                symbol,
-                round(entry_price, 4),
-                f"{tp} / {sl}",
-                leverage,
-                final_signal
-            ])
-
-        except Exception as e:
-            print(f"⚠️ Error for {symbol}: {e}")
-            results.append([
-                symbol,
-                "-",
-                "-",
-                "-",
-                f"Error fetching"
-            ])
-
-    return pd.DataFrame(results, columns=["Symbol", "Entry Price", "TP / SL", "Leverage", "Signal"])
-
-
-
 # Initialize login state
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
