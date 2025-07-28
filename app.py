@@ -86,7 +86,7 @@ def pivot_play_signal(df):
     return "HOLD"
 
 def fetch_klines(symbol, interval='1h', limit=150):
-    url = f'https://api.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit={limit}'
+    klines = client.get_klines(symbol={symbol}&interval={interval}&limit={limit}'
     try:
         response = requests.get(url)
         data = response.json()
@@ -121,7 +121,7 @@ def ichimoku_cloud(df):
 
 def generate_signals(symbols):
    def fetch_klines(symbol, interval='1h', limit=150):
-    url = f'https://api.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit={limit}'
+    klines = client.get_klines(symbol={symbol}&interval={interval}&limit={limit}'
     try:
         response = requests.get(url)
         data = response.json()
@@ -157,7 +157,7 @@ def ichimoku_cloud(df):
 def generate_signals(symbols):
     results = []
     for symbol in symbols:
-        pair = symbol if "USDT" in symbol else symbol + "USDT"
+        pair = symbol if "USDC" in symbol else symbol + "USDC"
         try:
             df = fetch_ohlcv_binance(pair, interval="1h", limit=52)
             if df is None or len(df) < 52:
@@ -191,7 +191,7 @@ def generate_signals(symbols):
 
         except Exception as e:
             results.append([
-                pair.replace("USDT", "/USDT"),
+                pair.replace("USDC", "/USDC"),
                 "-",
                 "-",
                 "-",
@@ -319,8 +319,8 @@ else:
     symbols = ["XRP", "CRV", "FIL", "EGLD"]
 
 # Example: Define your table here
-basic_symbols = ["XRPUSDT", "CRVUSDT", "FILUSDT", "EGLDUSDT"]
-pro_symbols = ["BTCUSDT", "ETHUSDT", "XRPUSDT", "ADAUSDT", "QNTUSDT", "CRVUSDT", "FILUSDT", "EGLDUSDT"]
+basic_symbols = ["XRP/USDC", "CRV/USDC", "FIL/USDC", "EGLD/USDC"]
+pro_symbols = ["BTC/USDC", "ETH/USDC", "XRP/USDC", "ADA/USDC", "QNT/USDC", "CRV/USDC", "FIL/USDC", "EGLD/USDC"]
 
 # Display signals with new columns
 if st.session_state.get("user_plan") == "Basic Plan":
