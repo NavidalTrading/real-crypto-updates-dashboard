@@ -298,25 +298,6 @@ else:
     st.info("ℹ️ On the **Basic Plan**, you see standard coins.")
     symbols = ["XRP", "CRV", "FIL", "EGLD"]
 
-# ✅ Do NOT override `symbols` again here
-data = []
-
-for sym in symbols:
-    price = "N/A"
-    pair_used = ""
-    for suffix in ["USDC", "USDT"]:
-        pair = f"{sym}{suffix}"
-        try:
-            r = requests.get(f"https://api.binance.com/api/v3/ticker/price?symbol={pair}")
-            if r.status_code == 200:
-                price = float(r.json()["price"])
-                pair_used = pair
-                break
-        except:
-            continue
-    display_pair = pair_used if pair_used else f"{sym}/N/A"
-    data.append([display_pair, "Coming Soon", price, "-5%", "+10%"])
-
 # Example: Define your table here
 basic_symbols = ["XRPUSDT", "CRVUSDT", "FILUSDT", "EGLDUSDT"]
 pro_symbols = ["BTCUSDT", "ETHUSDT", "XRPUSDT", "ADAUSDT", "QNTUSDT", "CRVUSDT", "FILUSDT", "EGLDUSDT"]
