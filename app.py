@@ -28,7 +28,8 @@ def password_gate():
 
     if uploaded_file:
         filename = uploaded_file.name.lower()
-        current_month = datetime.datetime.now().strftime("%B").lower()
+        current_month = datetime.now().strftime("%B").lower()
+
         plan_type = ""
 
         if "pro" in filename:
