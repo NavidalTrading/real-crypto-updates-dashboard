@@ -179,7 +179,7 @@ def generate_signals(symbols):
                 signal
             ])
                 except Exception as e:
-            results.append([symbol.replace("USDT", "/USDT"), "-", "-", "-", f"Error: {str(e)}"])
+                           results.append([symbol.replace("USDT", "/USDT"), "-", "-", "-", f"Error: {str(e)}"])
     return pd.DataFrame(results, columns=["Symbol", "Entry Price", "TP/SL", "Leverage", "Signal"])
 
 
