@@ -147,40 +147,43 @@ def ichimoku_cloud(df):
 def generate_signals(symbols):
     results = []
     for symbol in symbols:
+        pair = symbol + "USDT"
         try:
-            df = fetch_klines(symbol)
-            if df is None or len(df) < 52:
-                raise Exception("Insufficient data")
+            klines = client.get_klines(symbol=pair, interval=KLINE_INTERVAL_1HOUR, limit=52)
+            closes = [float(entry[4]) for entry in klines]
+            highs = [float(entry[2]) for entry in klines]
+            lows = [float(entry[3]) for entry in klines]
 
-            tenkan, kijun, span_a, span_b = ichimoku_cloud(df)
+            df = pd.DataFrame({
+                "Close": closes,
+                "High": highs,
+                "Low": lows
+            })
 
-            last_close = df['close'].iloc[-1]
-            signal = "WAIT"
-            leverage = "-"
-            tp = "-"
-            sl = "-"
-
-            if tenkan.iloc[-1] > kijun.iloc[-1] and last_close > span_a.iloc[-1] and last_close > span_b.iloc[-1]:
-                signal = "BUY"
-                tp = round(last_close * 1.10, 2)
-                sl = round(last_close * 0.95, 2)
-                leverage = "10x"
-            elif tenkan.iloc[-1] < kijun.iloc[-1] and last_close < span_a.iloc[-1] and last_close < span_b.iloc[-1]:
-                signal = "SELL"
-                tp = round(last_close * 0.90, 2)
-                sl = round(last_close * 1.05, 2)
-                leverage = "20x"
+            signal = get_signal(df)
+            entry_price = closes[-1]
+            sl = round(entry_price * 0.95, 4)
+            tp = round(entry_price * 1.10, 4)
+            leverage = "x10"
 
             results.append([
                 symbol.replace("USDT", "/USDT"),
-                round(last_close, 2),
-                f"{tp}/{sl}" if tp != "-" else "-",
+                entry_price,
+                f"{tp} / {sl}",
                 leverage,
                 signal
             ])
-            except Exception as e:
-                       results.append([symbol.replace("USDT", "/USDT"), "-", "-", "-", f"Error: {str(e)}"])
-            return pd.DataFrame(results, columns=["Symbol", "Entry Price", "TP/SL", "Leverage", "Signal"])
+        except Exception as e:
+            results.append([
+                symbol.replace("USDT", "/USDT"),
+                "-",
+                "-",
+                "-",
+                f"Error: {str(e)}"
+            ])
+
+    return pd.DataFrame(results, columns=["Symbol", "Entry Price", "TP / SL", "Leverage", "Signal"])
+
 
 
 
