@@ -33,12 +33,12 @@ def fetch_ohlcv_coinmarketcap(symbol):
             'X-CMC_PRO_API_KEY': CMC_API_KEY,
         }
         url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/ohlcv/historical"
-params = {
-    "symbol": symbol,
-    "convert": "USD",
-    "time_start": start_date.isoformat(),
-    "time_end": end_date.isoformat()
-}
+        params = {
+            "symbol": symbol,
+            "convert": "USD",
+            "time_start": start_date.isoformat(),
+            "time_end": end_date.isoformat()
+        }
 
 response = requests.get(url, headers=headers, params=params)
 
