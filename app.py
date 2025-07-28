@@ -88,17 +88,26 @@ def generate_signals(symbols):
             else:
                 final_signal = "HOLD"
 
+            current_price = df["close"].iloc[-1]
+
             signals.append({
-                "Pair": sym.replace("USDT", "/USDT"),
+                "Symbol": sym.replace("USDT", "/USDT"),
+                "Entry Price": round(current_price, 4),
+                "TP/SL": "+10% / -5%",
+                "Leverage": "10x",
                 "Signal": final_signal
             })
-        except:
+        except Exception as e:
             signals.append({
-                "Pair": sym.replace("USDT", "/USDT"),
+                "Symbol": sym.replace("USDT", "/USDT"),
+                "Entry Price": "Error",
+                "TP/SL": "-",
+                "Leverage": "-",
                 "Signal": "Error fetching"
             })
 
     return pd.DataFrame(signals)
+
 
 
 # Initialize login state
