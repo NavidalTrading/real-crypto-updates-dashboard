@@ -249,10 +249,6 @@ elif st.session_state.get("user_plan") == "Pro Plan":
     signal_df.index = signal_df.index + 1
     st.dataframe(signal_df, use_container_width=True)
 
-
-# ✅ Add this immediately after definition
-signal_df.index = signal_df.index + 1
-
 # ✅ Then display
 st.subheader("📊 Real-Time Crypto Signals")
 st.dataframe(signal_df, use_container_width=True)
