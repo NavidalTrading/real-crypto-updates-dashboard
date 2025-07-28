@@ -27,9 +27,6 @@ def fetch_ohlcv_binance(symbol, interval="1h", limit=100):
         print(f"❌ Failed to fetch {symbol}: {e}")
         return None
 
-
-
-
 def ichimoku_signal(df):
     high_9 = df["high"].rolling(window=9).max()
     low_9 = df["low"].rolling(window=9).min()
@@ -126,6 +123,25 @@ def calculate_ichimoku(df):
 
     return df
 
+def signal_generator(df):
+    latest = df.iloc[-1]
+
+    # Basic Ichimoku + Cristian Chifoi Pivot Play logic
+    if (
+        latest['tenkan_sen'] > latest['kijun_sen'] and
+        latest['close'] > latest['senkou_span_a'] and
+        latest['close'] > latest['senkou_span_b']
+    ):
+        return "LONG"
+    elif (
+        latest['tenkan_sen'] < latest['kijun_sen'] and
+        latest['close'] < latest['senkou_span_a'] and
+        latest['close'] < latest['senkou_span_b']
+    ):
+        return "SHORT"
+    else:
+        return "NO SIGNAL"
+
 def generate_signals(symbols):
     results = []
     for symbol in symbols:
@@ -171,10 +187,6 @@ def generate_signals(symbols):
             ])
 
     return pd.DataFrame(results, columns=["Symbol", "Entry Price", "TP / SL", "Leverage", "Signal"])
-
-
-
-
 
 
 # Initialize login state
