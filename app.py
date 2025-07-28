@@ -11,9 +11,22 @@ from binance.spot import Spot
 client = Spot()  # Public data, no API key needed
 
 
+import requests
+import pandas as pd
+import streamlit as st
+
 def fetch_ohlcv_binance(symbol, interval='1h', limit=100):
     try:
-      url = "https://api.binance.com/api/v3/klines"(symbol=symbol, interval=interval, limit=limit)
+        url = "https://api.binance.com/api/v3/klines"
+        params = {
+            "symbol": symbol,
+            "interval": interval,
+            "limit": limit
+        }
+        response = requests.get(url, params=params)
+        response.raise_for_status()
+        klines = response.json()
+
         df = pd.DataFrame(klines, columns=[
             'timestamp', 'open', 'high', 'low', 'close', 'volume',
             'close_time', 'quote_asset_volume', 'number_of_trades',
@@ -26,6 +39,7 @@ def fetch_ohlcv_binance(symbol, interval='1h', limit=100):
     except Exception as e:
         st.error(f"Error fetching data for {symbol}: {e}")
         return None
+
 
 def ichimoku_signal(df):
     high_9 = df["high"].rolling(window=9).max()
