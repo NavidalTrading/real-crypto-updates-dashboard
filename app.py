@@ -234,14 +234,21 @@ for sym in symbols:
     data.append([display_pair, "Coming Soon", price, "-5%", "+10%"])
 
 # Example: Define your table here
-signal_df = pd.DataFrame({
-    "Pair": ["BTC/USDT", "ETH/USDT"],
-    "Signal": ["BUY", "SELL"],
-    "Leverage": ["10x", "20x"],
-    "Entry": [30000, 1800],
-    "SL": [29000, 1750],
-    "TP": [32000, 2000]
-})
+basic_symbols = ["XRPUSDT", "CRVUSDT", "FILUSDT", "EGLDUSDT"]
+pro_symbols = ["BTCUSDT", "ETHUSDT", "XRPUSDT", "ADAUSDT", "QNTUSDT", "CRVUSDT", "FILUSDT", "EGLDUSDT"]
+
+if st.session_state.plan == "Basic":
+    st.subheader("📊 Real-Time Crypto Signals (Basic Plan)")
+    signal_df = generate_signals(basic_symbols)
+    signal_df.index = signal_df.index + 1
+    st.dataframe(signal_df, use_container_width=True)
+
+elif st.session_state.plan == "Pro":
+    st.subheader("📊 Real-Time Crypto Signals (Pro Plan)")
+    signal_df = generate_signals(basic_symbols + pro_symbols)
+    signal_df.index = signal_df.index + 1
+    st.dataframe(signal_df, use_container_width=True)
+
 
 # ✅ Add this immediately after definition
 signal_df.index = signal_df.index + 1
