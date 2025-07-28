@@ -47,7 +47,7 @@ def password_gate():
         st.session_state.user_plan = plan_type
 
         st.success(f"✅ Crypto Daniel verified your **{plan_type}** payment proof.")
-        st.info(f"Your password for **{current_month.capitalize()}** is: `{password}`\n\nAccess valid for 30 days.")
+        st.info(f"Your password for **{current_month.capitalize()}** is: `{password}`Access valid for 30 days.")
 
     # Show password input only if access not yet granted
     if "access_granted" not in st.session_state:
@@ -109,7 +109,7 @@ st.markdown("""
 # Crypto data table 
 user_plan = st.session_state.get("user_plan", "Basic")
 
-st.markdown(f"### 👤 You are on the **{user_plan} Plan**")
+st.markdown(f"### 👤 You are on the **{user_plan} **")
 
 if user_plan == "Pro":
     st.success("✅ You have access to **Pro** content including early signals, premium coins and full dashboard.")
