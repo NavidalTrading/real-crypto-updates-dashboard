@@ -29,12 +29,12 @@ def password_gate():
         current_month = datetime.now().strftime("%B").lower()
         expected_password = f"realcrypto-{current_month}"
         if plan:
-    st.success(f"✅ Crypto Daniel verified your **{plan} Plan** payment proof.")
-    st.session_state["authenticated"] = True
-    st.session_state["auth_expiry"] = datetime.now() + timedelta(days=30)
-    st.info(f"Your password for **{current_month.capitalize()}** is: `{expected_password}`\n\nAccess valid for 30 days.")
-    st.session_state["user_plan"] = plan
-    st.success(f"✅ Crypto Daniel verified your **{plan} Plan** payment proof.")
+            st.success(f"✅ Crypto Daniel verified your **{plan} Plan** payment proof.")
+            st.session_state["authenticated"] = True
+            st.session_state["auth_expiry"] = datetime.now() + timedelta(days=30)
+            st.info(f"Your password for **{current_month.capitalize()}** is: `{expected_password}`\n\nAccess valid for 30 days.")
+            st.session_state["user_plan"] = plan
+            st.success(f"✅ Crypto Daniel verified your **{plan} Plan** payment proof.")
             st.session_state["authenticated"] = True
             st.session_state["auth_expiry"] = datetime.now() + timedelta(days=30)
             st.info(f"Your password for **{current_month.capitalize()}** is: `{expected_password}`\\n\\nAccess valid for 30 days.")
