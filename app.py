@@ -21,6 +21,7 @@ symbol_map = {
     'CRVUSDC': 'curve-dao-token',
     'FILUSDC': 'filecoin',
     'EGLDUSDC': 'elrond-erd-2'
+    }
 
 def fetch_ohlcv_coingecko(symbol, vs_currency='usd', days='1'):
     try:
