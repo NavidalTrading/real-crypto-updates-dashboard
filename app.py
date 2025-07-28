@@ -7,24 +7,24 @@ import streamlit.components.v1 as components
 import numpy as np
 import time
 
-# === Symbol mapping here ===
 symbol_map = {
-    'XRP': 'ripple',
-    'CRV': 'curve-dao-token',
-    'FIL': 'filecoin',
-    'EGLD': 'multiversx',
-    'BTC': 'bitcoin',
-    'ETH': 'ethereum',
-    'ADA': 'cardano',
-    'QNT': 'quant'
+    'XRP': 'XRP',
+    'CRV': 'CRV',
+    'FIL': 'FIL',
+    'EGLD': 'EGLD',
+    'BTC': 'BTC',
+    'ETH': 'ETH',
+    'ADA': 'ADA',
+    'QNT': 'QNT'
 }
+
 CMC_API_KEY = "c75c8f96-f121-46bf-82f7-5dab19eced12"  # <-- Paste your API key here
 
 def fetch_ohlcv_coinmarketcap(slug, interval='1h'):
     try:
         url = f"https://pro-api.coinmarketcap.com/v1/cryptocurrency/ohlcv/historical"
         params = {
-            'symbol': slug.upper(),  # CoinMarketCap accepts symbol, not slug
+            'symbol': slug, 
             'interval': interval,
             'time_start': (datetime.now() - pd.Timedelta(days=1)).strftime('%Y-%m-%d'),
             'time_end': datetime.now().strftime('%Y-%m-%d'),
@@ -54,7 +54,7 @@ def fetch_ohlcv_coinmarketcap(slug, interval='1h'):
         return df[['open', 'high', 'low', 'close', 'volume']]
 
     except Exception as e:
-        st.error(f"⚠️ Error fetching data for {slug}: {e}")
+        st.error(f"⚠️ Error for {symbol} ({cg_symbol}): {e}")
         return None
 
 
@@ -209,7 +209,7 @@ def generate_signals(symbols):
         cg_symbol = symbol_map.get(symbol, "")
         if cg_symbol:
             try:
-                df = fetch_ohlcv_coinmarketcap(symbol)
+                df = fetch_ohlcv_coinmarketcap(cg_symbol)
                 if df is None or len(df) < 52:
                     raise Exception("Insufficient data")
 
