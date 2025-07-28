@@ -102,6 +102,30 @@ def ichimoku_cloud(df):
 
     return tenkan_sen, kijun_sen, senkou_span_a, senkou_span_b
 
+def calculate_ichimoku(df):
+    # Tenkan-sen (Conversion Line): (9-period high + 9-period low)/2
+    high_9 = df['high'].rolling(window=9).max()
+    low_9 = df['low'].rolling(window=9).min()
+    df['tenkan_sen'] = (high_9 + low_9) / 2
+
+    # Kijun-sen (Base Line): (26-period high + 26-period low)/2
+    high_26 = df['high'].rolling(window=26).max()
+    low_26 = df['low'].rolling(window=26).min()
+    df['kijun_sen'] = (high_26 + low_26) / 2
+
+    # Senkou Span A (Leading Span A): (Tenkan-sen + Kijun-sen)/2 shifted 26 periods ahead
+    df['senkou_span_a'] = ((df['tenkan_sen'] + df['kijun_sen']) / 2).shift(26)
+
+    # Senkou Span B (Leading Span B): (52-period high + 52-period low)/2 shifted 26 periods ahead
+    high_52 = df['high'].rolling(window=52).max()
+    low_52 = df['low'].rolling(window=52).min()
+    df['senkou_span_b'] = ((high_52 + low_52) / 2).shift(26)
+
+    # Chikou Span (Lagging Span): Close shifted 26 periods behind
+    df['chikou_span'] = df['close'].shift(-26)
+
+    return df
+
 def generate_signals(symbols):
     results = []
     for symbol in symbols:
