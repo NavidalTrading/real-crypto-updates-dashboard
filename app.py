@@ -24,7 +24,12 @@ def password_gate():
     st.title("🔐 Enter Password to Access Dashboard")
     uploaded_file = st.file_uploader("Upload Payment Proof", type=["png", "jpg", "jpeg", "pdf"])
 
-   if uploaded_file:
+if "uploaded_file" not in st.session_state:
+    st.session_state["uploaded_file"] = None
+
+uploaded_file = st.file_uploader("Upload Payment Proof", type=["png", "jpg", "jpeg", "pdf"])
+   
+if uploaded_file:
     file_name = uploaded_file.name.lower()
 
     if "basic" in file_name:
