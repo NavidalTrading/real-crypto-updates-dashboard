@@ -15,7 +15,7 @@ client = Client(api_key=binance_api_key, api_secret=binance_api_secret)
 
 
 def fetch_ohlcv_binance(symbol="BTCUSDT", interval="1h", limit=100):
-    url = f"https://api.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit={limit}"
+    klines = client.get_klines symbol={symbol}&interval={interval}&limit={limit}"
     data = requests.get(url).json()
     df = pd.DataFrame(data, columns=[
         "timestamp", "open", "high", "low", "close", "volume",
