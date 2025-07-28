@@ -32,12 +32,12 @@ def password_gate():
             st.success(f"✅ Crypto Daniel verified your **{plan} Plan** payment proof.")
             st.session_state["authenticated"] = True
             st.session_state["auth_expiry"] = datetime.now() + timedelta(days=30)
-            st.info(f"Your password for **{current_month.capitalize()}** is: `{expected_password}`\n\nAccess valid for 30 days.")
+            st.info(f"Your password for **{current_month.capitalize()}** is: `{expected_password}` Access valid for 30 days.")
             st.session_state["user_plan"] = plan
             st.success(f"✅ Crypto Daniel verified your **{plan} Plan** payment proof.")
             st.session_state["authenticated"] = True
             st.session_state["auth_expiry"] = datetime.now() + timedelta(days=30)
-            st.info(f"Your password for **{current_month.capitalize()}** is: `{expected_password}`\\n\\nAccess valid for 30 days.")
+            st.info(f"Your password for **{current_month.capitalize()}** is: `{expected_password}` Access valid for 30 days.")
         else:
             st.warning("❌ Unable to verify payment.")
 
@@ -103,7 +103,7 @@ st.markdown(f"### 👤 You are on the **{user_plan} Plan**")
 if user_plan == "Pro":
     st.success("✅ You have access to **Pro** content including early signals, premium coins and full dashboard.")
 else:
-    st.info("ℹ️ On the **Basic Plan**, you see standard coins and delayed updates.")
+    st.info("ℹ️ On the **Basic Plan**, you see standard coins.")
     symbols = ["XRP", "CRV", "FIL", "EGLD"] if user_plan == "Basic" else ["BTC", "ETH", "XRP", "ADA", "QNT", "CRV", "FIL", "EGLD"]
 
 
