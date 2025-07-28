@@ -13,8 +13,8 @@ client = Spot()  # No API key needed for public data
 
 def fetch_ohlcv_binance(symbol, interval="1h", limit=100):
     try:
-        klines = client.get_klines(symbol=symbol, interval=interval, limit=limit)
-        df = pd.DataFrame(klines, columns=[
+        raw = client.klines(symbol, interval, limit=limit)
+        df = pd.DataFrame(raw, columns=[
             "timestamp", "open", "high", "low", "close", "volume",
             "close_time", "quote_asset_volume", "number_of_trades",
             "taker_buy_base_volume", "taker_buy_quote_volume", "ignore"
@@ -24,8 +24,9 @@ def fetch_ohlcv_binance(symbol, interval="1h", limit=100):
         df = df[["open", "high", "low", "close", "volume"]].astype(float)
         return df
     except Exception as e:
-        print(f"Error fetching data for {symbol}: {e}")
+        print(f"❌ Failed to fetch {symbol}: {e}")
         return None
+
 
 
 def ichimoku_signal(df):
