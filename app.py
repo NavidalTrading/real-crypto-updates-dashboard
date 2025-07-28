@@ -20,8 +20,32 @@ def extract_plan_from_filename(filename):
         return "Pro"
     return None
  
-def password_gate():
-    st.title("🔐 Enter Password to Access Dashboard")
+    def password_gate():
+    st.title("🔒 Enter Password to Access Dashboard")
+
+    uploaded_file = st.file_uploader("Upload Payment Proof", type=["png", "jpg", "jpeg", "pdf"], key="payment_upload")
+
+    # Process uploaded proof file
+    if uploaded_file:
+        st.success("🧾 Crypto Daniel verified your Basic Plan payment proof.")
+        st.info("Your password for July is: `realcrypto-july`\n\nAccess valid for 30 days.")
+        # You can also set this password in session:
+        st.session_state.valid_password = "realcrypto-july"
+
+    if "access_granted" not in st.session_state:
+        st.session_state.access_granted = False
+
+    if st.session_state.access_granted:
+        return  # Skip login if already granted
+
+    password = st.text_input("Password", type="password")
+    if st.button("Submit"):
+        if password == st.session_state.get("valid_password"):
+            st.session_state.access_granted = True
+            st.rerun()
+        else:
+            st.error("Incorrect password.")
+
    
 
 if "uploaded_file" not in st.session_state:
