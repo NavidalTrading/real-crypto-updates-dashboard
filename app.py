@@ -6,12 +6,10 @@ from datetime import datetime
 import streamlit.components.v1 as components
 import numpy as np
 from binance.client import Client
+from binance.spot import Spot
 
-# ⛔️ Replace these with your real Binance API credentials!
-binance_api_key = "..."
-binance_api_secret = "..."
+client = Spot()  # No API key needed for public data
 
-client = Client(api_key=binance_api_key, api_secret=binance_api_secret)
 
 def fetch_ohlcv_binance(symbol, interval="1h", limit=100):
     try:
