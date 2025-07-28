@@ -201,13 +201,12 @@ def generate_signals(symbols):
     results = []
     for symbol in symbols:
         cg_symbol = symbol_map.get(symbol, "")
-if cg_symbol:
+    if cg_symbol:
     df = fetch_ohlcv_coingecko(cg_symbol)
-else:
+    else:
     st.error(f"Symbol {symbol} not supported on CoinGecko.")
     df = None
-
-        try:
+    try:
             df =fetch_ohlcv_coingecko(symbol, vs_currency='usd', days='1')
             if df is None or len(df) < 52:
                 raise Exception("Insufficient data")
