@@ -9,14 +9,14 @@ import time
 
 # === Symbol mapping here ===
 symbol_map = {
-    'XRPUSDC': 'ripple',
-    'CRVUSDC': 'curve-dao-token',
-    'FILUSDC': 'filecoin',
-    'EGLDUSDC': 'multiversx',
-    'BTCUSDC': 'bitcoin',
-    'ETHUSDC': 'ethereum',
-    'ADAUSDC': 'cardano',
-    'QNTUSDC': 'quant'
+    'XRP': 'ripple',
+    'CRV': 'curve-dao-token',
+    'FIL': 'filecoin',
+    'EGLD': 'multiversx',
+    'BTC': 'bitcoin',
+    'ETH': 'ethereum',
+    'ADA': 'cardano',
+    'QNT': 'quant'
 }
 CMC_API_KEY = "c75c8f96-f121-46bf-82f7-5dab19eced12"  # <-- Paste your API key here
 
@@ -365,8 +365,8 @@ else:
     symbols = ["XRP", "CRV", "FIL", "EGLD"]
 
 # Example: Define your table here
-basic_symbols = ["XRPUSDC", "CRVUSDC", "FILUSDC", "EGLDUSDC"]
-pro_symbols = ["BTCUSDC", "ETHUSDC", "XRPUSDC", "ADAUSDC", "QNTUSDC", "CRVUSDC", "FILUSDC", "EGLDUSDC"]
+basic_symbols = ["XRP", "CRV", "FIL", "EGLD"]
+pro_symbols = ["BTC", "ETH", "XRP", "ADA", "QNT", "CRV", "FIL", "EGLD"]
 
 # Display signals with new columns
 if st.session_state.get("user_plan") == "Basic Plan":
