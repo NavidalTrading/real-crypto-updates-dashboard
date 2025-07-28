@@ -199,45 +199,53 @@ def signal_generator(df):
 
 def generate_signals(symbols):
     results = []
+
     for symbol in symbols:
         cg_symbol = symbol_map.get(symbol, "")
-    if cg_symbol:
-    df = fetch_ohlcv_coingecko(cg_symbol)
-    if df is not None and not df.empty:
-        signal = signal_generator(df)
-        # Add values to table
-        results.append({
-            'Symbol': symbol,
-            'Entry Price': df['close'].iloc[-1],
-            'TP / SL': '+10% / -5%',
-            'Leverage': '10x',
-            'Signal': signal
-        })
-    else:
-        results.append({
-            'Symbol': symbol,
-            'Entry Price': '-',
-            'TP / SL': '-',
-            'Leverage': '-',
-            'Signal': 'Error fetching'
-        })
-else:
-    results.append({
-        'Symbol': symbol,
-        'Entry Price': '-',
-        'TP / SL': '-',
-        'Leverage': '-',
-        'Signal': 'Symbol not found'
-    })
+        if cg_symbol:
+            try:
+                df = fetch_ohlcv_coingecko(cg_symbol)
+                if df is None or len(df) < 52:
+                    raise Exception("Insufficient data")
 
-    df = fetch_ohlcv_coingecko(cg_symbol)
-    else:
-    st.error(f"Symbol {symbol} not supported on CoinGecko.")
-    df = None
-    try:
-            df =fetch_ohlcv_coingecko(symbol, vs_currency='usd', days='1')
-            if df is None or len(df) < 52:
-                raise Exception("Insufficient data")
+                df = calculate_ichimoku(df)  # Ensure Ichimoku lines exist
+                ichimoku = ichimoku_signal(df)
+                pivot = pivot_play_signal(df)
+
+                # Combine both signals
+                if ichimoku == "BUY" and pivot == "BUY":
+                    final_signal = "STRONG BUY"
+                elif ichimoku == "SELL" and pivot == "SELL":
+                    final_signal = "STRONG SELL"
+                elif ichimoku == "HOLD" or pivot == "HOLD":
+                    final_signal = "HOLD"
+                else:
+                    final_signal = "MIXED"
+
+                entry_price = df["close"].iloc[-1]
+                tp = round(entry_price * 1.10, 4)
+                sl = round(entry_price * 0.95, 4)
+                leverage = "x10"
+
+                results.append([
+                    symbol,
+                    round(entry_price, 4),
+                    f"{tp} / {sl}",
+                    leverage,
+                    final_signal
+                ])
+            except Exception as e:
+                st.error(f"⚠️ Error for {symbol}: {e}")
+                results.append([
+                    symbol, "-", "-", "-", "Error fetching"
+                ])
+        else:
+            results.append([
+                symbol, "-", "-", "-", "Symbol not found"
+            ])
+
+    return pd.DataFrame(results, columns=["Symbol", "Entry Price", "TP / SL", "Leverage", "Signal"])
+
 
             df = calculate_ichimoku(df)  # ✅ Add this to get required columns
 
