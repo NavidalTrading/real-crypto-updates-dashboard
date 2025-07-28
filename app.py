@@ -7,6 +7,7 @@ import streamlit.components.v1 as components
 import numpy as np
 from binance.client import Client
 from binance.spot import Spot
+import time
 
 client = Spot()  # Public data, no API key needed
 
