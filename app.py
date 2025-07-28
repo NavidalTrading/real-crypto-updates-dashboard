@@ -113,12 +113,12 @@ st.markdown(f"### 👤 You are on the **{user_plan} **")
 
 if user_plan == "Pro":
     st.success("✅ You have access to **Pro** content including early signals, premium coins and full dashboard.")
+    symbols = ["BTC", "ETH", "XRP", "ADA", "QNT", "CRV", "FIL", "EGLD"]
 else:
     st.info("ℹ️ On the **Basic Plan**, you see standard coins.")
-    symbols = ["XRP", "CRV", "FIL", "EGLD"] if user_plan == "Basic" else ["BTC", "ETH", "XRP", "ADA", "QNT", "CRV", "FIL", "EGLD"]
+    symbols = ["XRP", "CRV", "FIL", "EGLD"]
 
-
-symbols = ["BTC", "ETH", "XRP", "ADA", "QNT", "CRV", "FIL", "EGLD"]
+# ✅ Do NOT override `symbols` again here
 data = []
 
 for sym in symbols:
@@ -138,6 +138,7 @@ for sym in symbols:
     data.append([display_pair, "Coming Soon", price, "-5%", "+10%"])
 
 df = pd.DataFrame(data, columns=["Pair", "Signal", "Price", "Stop Loss", "Take Profit"])
+signal_df.index = signal_df.index + 1  # Make index start from 1 instead of 0
 st.dataframe(df, use_container_width=True)
 
 # Auto-Trader
