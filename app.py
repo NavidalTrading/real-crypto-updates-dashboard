@@ -208,7 +208,7 @@ def generate_signals(symbols):
                 if df is None or len(df) < 52:
                     raise Exception("Insufficient data")
 
-                df = calculate_ichimoku(df)  # Ensure Ichimoku lines exist
+                df = calculate_ichimoku(df)
                 ichimoku = ichimoku_signal(df)
                 pivot = pivot_play_signal(df)
 
