@@ -31,26 +31,30 @@ def fetch_ohlcv_coingecko(symbol, vs_currency='usd', days='1'):
             'days': days,
             'interval': 'hourly'
         }
-        response = requests.get(url, params=params)
+        headers = {
+            "User-Agent": "Mozilla/5.0"
+        }
+        response = requests.get(url, params=params, headers=headers)
         response.raise_for_status()
-        data = response.json()
+        time.sleep(1.5)  # prevent rate limit errors
 
+        data = response.json()
         prices = data['prices']
         df = pd.DataFrame(prices, columns=['timestamp', 'price'])
         df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
         df.set_index('timestamp', inplace=True)
 
-        # We'll create dummy OHLCV from price for simplicity
         df['open'] = df['price']
         df['high'] = df['price']
         df['low'] = df['price']
         df['close'] = df['price']
-        df['volume'] = 1000  # placeholder volume
+        df['volume'] = 1000  # dummy volume
         return df[['open', 'high', 'low', 'close', 'volume']]
 
     except Exception as e:
         st.error(f"Error fetching data for {symbol.upper()}: {e}")
         return None
+
 
 
 def ichimoku_signal(df):
