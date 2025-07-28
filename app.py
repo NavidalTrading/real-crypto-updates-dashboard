@@ -203,6 +203,34 @@ def generate_signals(symbols):
         cg_symbol = symbol_map.get(symbol, "")
     if cg_symbol:
     df = fetch_ohlcv_coingecko(cg_symbol)
+    if df is not None and not df.empty:
+        signal = signal_generator(df)
+        # Add values to table
+        results.append({
+            'Symbol': symbol,
+            'Entry Price': df['close'].iloc[-1],
+            'TP / SL': '+10% / -5%',
+            'Leverage': '10x',
+            'Signal': signal
+        })
+    else:
+        results.append({
+            'Symbol': symbol,
+            'Entry Price': '-',
+            'TP / SL': '-',
+            'Leverage': '-',
+            'Signal': 'Error fetching'
+        })
+else:
+    results.append({
+        'Symbol': symbol,
+        'Entry Price': '-',
+        'TP / SL': '-',
+        'Leverage': '-',
+        'Signal': 'Symbol not found'
+    })
+
+    df = fetch_ohlcv_coingecko(cg_symbol)
     else:
     st.error(f"Symbol {symbol} not supported on CoinGecko.")
     df = None
