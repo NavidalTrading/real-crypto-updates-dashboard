@@ -15,29 +15,40 @@ import requests
 import pandas as pd
 import streamlit as st
 
-def fetch_ohlcv_binance(symbol, interval='1h', limit=100):
+# === Symbol mapping here ===
+symbol_map = {
+    'XRPUSDC': 'ripple',
+    'CRVUSDC': 'curve-dao-token',
+    'FILUSDC': 'filecoin',
+    'EGLDUSDC': 'elrond-erd-2'
+
+def fetch_ohlcv_coingecko(symbol, vs_currency='usd', days='1'):
     try:
-        url = "https://api.binance.com/api/v3/klines"
+        url = f"https://api.coingecko.com/api/v3/coins/{symbol.lower()}/market_chart"
         params = {
-            "symbol": symbol,
-            "interval": interval,
-            "limit": limit
+            'vs_currency': vs_currency,
+            'days': days,
+            'interval': 'hourly'
         }
         response = requests.get(url, params=params)
         response.raise_for_status()
-        klines = response.json()
+        data = response.json()
 
-        df = pd.DataFrame(klines, columns=[
-            'timestamp', 'open', 'high', 'low', 'close', 'volume',
-            'close_time', 'quote_asset_volume', 'number_of_trades',
-            'taker_buy_base_volume', 'taker_buy_quote_volume', 'ignore'
-        ])
+        prices = data['prices']
+        df = pd.DataFrame(prices, columns=['timestamp', 'price'])
         df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
         df.set_index('timestamp', inplace=True)
-        df[['open', 'high', 'low', 'close', 'volume']] = df[['open', 'high', 'low', 'close', 'volume']].astype(float)
+
+        # We'll create dummy OHLCV from price for simplicity
+        df['open'] = df['price']
+        df['high'] = df['price']
+        df['low'] = df['price']
+        df['close'] = df['price']
+        df['volume'] = 1000  # placeholder volume
         return df[['open', 'high', 'low', 'close', 'volume']]
+
     except Exception as e:
-        st.error(f"Error fetching data for {symbol}: {e}")
+        st.error(f"Error fetching data for {symbol.upper()}: {e}")
         return None
 
 
@@ -188,9 +199,15 @@ def signal_generator(df):
 def generate_signals(symbols):
     results = []
     for symbol in symbols:
-        pair = symbol.replace("/", "")  # convert XRP/USDC to XRPUSDC
+        cg_symbol = symbol_map.get(symbol, "")
+if cg_symbol:
+    df = fetch_ohlcv_coingecko(cg_symbol)
+else:
+    st.error(f"Symbol {symbol} not supported on CoinGecko.")
+    df = None
+
         try:
-            df = fetch_ohlcv_binance(pair, interval="1h", limit=52)
+            df =fetch_ohlcv_coingecko(symbol, vs_currency='usd', days='1')
             if df is None or len(df) < 52:
                 raise Exception("Insufficient data")
 
