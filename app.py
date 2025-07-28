@@ -102,24 +102,6 @@ def ichimoku_cloud(df):
 
     return tenkan_sen, kijun_sen, senkou_span_a, senkou_span_b
 
-def generate_signals(symbols):
-   def fetch_klines(symbol, interval='1h', limit=150):
-    klines = client.get_klines(symbol=symbol, interval=interval, limit=limit)
-    try:
-        response = requests.get()
-        data = response.json()
-        df = pd.DataFrame(data, columns=[
-            'timestamp', 'open', 'high', 'low', 'close', 'volume',
-            'close_time', 'quote_asset_volume', 'number_of_trades',
-            'taker_buy_base_volume', 'taker_buy_quote_volume', 'ignore'
-        ])
-        df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
-        df.set_index('timestamp', inplace=True)
-        df = df[['open', 'high', 'low', 'close']].astype(float)
-        return df
-    except:
-        return None
-
 def ichimoku_cloud(df):
     high_9 = df['high'].rolling(window=9).max()
     low_9 = df['low'].rolling(window=9).min()
