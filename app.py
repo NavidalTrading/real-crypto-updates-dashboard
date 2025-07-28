@@ -5,6 +5,14 @@ import requests
 from datetime import datetime
 import streamlit.components.v1 as components
 import numpy as np
+from binance.client import Client
+
+# ⛔️ Replace these with your real Binance API credentials!
+binance_api_key = "Fmmhrif5cwYKDZKzzfWcKyacCQhA8QG4dfBIJa1MDH6DXhfzL74QtZbCciYu1gzV"
+binance_api_secret = "WGoYCg1X0tGOFVcbnsVgFEelNRJhImZhQ2hQR2kEVPalqu2NdGhEcSMiQi8KAeod"
+
+client = Client(api_key=binance_api_key, api_secret=binance_api_secret)
+
 
 def fetch_ohlcv_binance(symbol="BTCUSDT", interval="1h", limit=100):
     url = f"https://api.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit={limit}"
