@@ -11,20 +11,20 @@ from binance.spot import Spot
 client = Spot()  # Public data, no API key needed
 
 
-def fetch_ohlcv_binance(symbol, interval="1h", limit=100):
+def fetch_ohlcv_binance(symbol, interval='1h', limit=100):
     try:
-        raw = client.klines(symbol.replace("/", ""), interval, limit=limit)
-        df = pd.DataFrame(raw, columns=[
-            "timestamp", "open", "high", "low", "close", "volume",
-            "close_time", "quote_asset_volume", "number_of_trades",
-            "taker_buy_base_volume", "taker_buy_quote_volume", "ignore"
+        klines = client.get_klines(symbol=symbol, interval=interval, limit=limit)
+        df = pd.DataFrame(klines, columns=[
+            'timestamp', 'open', 'high', 'low', 'close', 'volume',
+            'close_time', 'quote_asset_volume', 'number_of_trades',
+            'taker_buy_base_volume', 'taker_buy_quote_volume', 'ignore'
         ])
-        df["timestamp"] = pd.to_datetime(df["timestamp"], unit="ms")
-        df.set_index("timestamp", inplace=True)
-        df = df[["open", "high", "low", "close", "volume"]].astype(float)
-        return df
+        df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
+        df.set_index('timestamp', inplace=True)
+        df[['open', 'high', 'low', 'close', 'volume']] = df[['open', 'high', 'low', 'close', 'volume']].astype(float)
+        return df[['open', 'high', 'low', 'close', 'volume']]
     except Exception as e:
-        print(f"❌ Failed to fetch {symbol}: {e}")
+        st.error(f"Error fetching data for {symbol}: {e}")
         return None
 
 def ichimoku_signal(df):
@@ -122,6 +122,35 @@ def calculate_ichimoku(df):
     df['chikou_span'] = df['close'].shift(-26)
 
     return df
+    
+def calculate_ichimoku(df):
+    # Tenkan-sen (Conversion Line): (9-period high + 9-period low)/2
+    high_9 = df['high'].rolling(window=9).max()
+    low_9 = df['low'].rolling(window=9).min()
+    df['tenkan_sen'] = (high_9 + low_9) / 2
+
+    # Kijun-sen (Base Line): (26-period high + 26-period low)/2
+    high_26 = df['high'].rolling(window=26).max()
+    low_26 = df['low'].rolling(window=26).min()
+    df['kijun_sen'] = (high_26 + low_26) / 2
+
+    # Signal
+    df['signal'] = df.apply(
+        lambda row: 'Buy' if row['tenkan_sen'] > row['kijun_sen'] else ('Sell' if row['tenkan_sen'] < row['kijun_sen'] else 'Hold'),
+        axis=1
+    )
+
+    return df
+def generate_signals(df):
+    df = calculate_ichimoku(df)
+    last_row = df.iloc[-1]
+    signal = last_row['signal']
+    entry_price = last_row['close']
+    tp = entry_price * 1.10
+    sl = entry_price * 0.95
+    leverage = "10x"
+    return signal, entry_price, tp, sl, leverage
+
 
 def signal_generator(df):
     latest = df.iloc[-1]
@@ -307,8 +336,8 @@ else:
     symbols = ["XRP", "CRV", "FIL", "EGLD"]
 
 # Example: Define your table here
-basic_symbols = ["XRP/USDC", "CRV/USDC", "FIL/USDC", "EGLD/USDC"]
-pro_symbols = ["BTC/USDC", "ETH/USDC", "XRP/USDC", "ADA/USDC", "QNT/USDC", "CRV/USDC", "FIL/USDC", "EGLD/USDC"]
+basic_symbols = ["XRPUSDC", "CRVUSDC", "FILUSDC", "EGLDUSDC"]
+pro_symbols = ["BTCUSDC", "ETHUSDC", "XRPUSDC", "ADAUSDC", "QNTUSDC", "CRVUSDC", "FILUSDC", "EGLDUSDC"]
 
 # Display signals with new columns
 if st.session_state.get("user_plan") == "Basic Plan":
