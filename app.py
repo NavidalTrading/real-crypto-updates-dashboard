@@ -157,42 +157,49 @@ def ichimoku_cloud(df):
 def generate_signals(symbols):
     results = []
     for symbol in symbols:
-        pair = symbol + "USDT"
+        pair = symbol if "USDT" in symbol else symbol + "USDT"
         try:
-            klines = client.get_klines(symbol=pair, interval=KLINE_INTERVAL_1HOUR, limit=52)
-            closes = [float(entry[4]) for entry in klines]
-            highs = [float(entry[2]) for entry in klines]
-            lows = [float(entry[3]) for entry in klines]
+            df = fetch_ohlcv_binance(pair, interval="1h", limit=52)
+            if df is None or len(df) < 52:
+                raise Exception("Insufficient data")
 
-            df = pd.DataFrame({
-                "Close": closes,
-                "High": highs,
-                "Low": lows
-            })
+            ichimoku = ichimoku_signal(df)
+            pivot = pivot_play_signal(df)
 
-            signal = get_signal(df)
-            entry_price = closes[-1]
-            sl = round(entry_price * 0.95, 4)
+            # Combine both signals
+            if ichimoku == "BUY" and pivot == "BUY":
+                final_signal = "STRONG BUY"
+            elif ichimoku == "SELL" and pivot == "SELL":
+                final_signal = "STRONG SELL"
+            elif ichimoku == "HOLD" or pivot == "HOLD":
+                final_signal = "HOLD"
+            else:
+                final_signal = "MIXED"
+
+            entry_price = df["close"].iloc[-1]
             tp = round(entry_price * 1.10, 4)
+            sl = round(entry_price * 0.95, 4)
             leverage = "x10"
 
             results.append([
-                symbol.replace("USDT", "/USDT"),
-                entry_price,
+                pair.replace("USDT", "/USDT"),
+                round(entry_price, 4),
                 f"{tp} / {sl}",
                 leverage,
-                signal
+                final_signal
             ])
+
         except Exception as e:
             results.append([
-                symbol.replace("USDT", "/USDT"),
+                pair.replace("USDT", "/USDT"),
                 "-",
                 "-",
                 "-",
-                f"Error: {str(e)}"
+                f"Error fetching"
             ])
 
     return pd.DataFrame(results, columns=["Symbol", "Entry Price", "TP / SL", "Leverage", "Signal"])
+
 
 
 
