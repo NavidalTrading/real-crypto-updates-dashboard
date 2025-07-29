@@ -34,7 +34,18 @@ def fetch_ohlcv_cmc(symbol, start_date, end_date):
             "Accepts": "application/json",
             "X-CMC_PRO_API_KEY": authorization
         }
-        response = requests.get(url, headers=headers)
+       response = requests.get(url, headers=headers, params=params)
+
+if response.status_code != 200:
+    st.warning(f"⚠️ API returned {response.status_code} for {symbol}: {response.text}")
+    return None
+
+try:
+    data = response.json()
+except Exception as e:
+    st.error(f"⚠️ Error fetching data for {symbol}: {e}")
+    return None
+
         response.raise_for_status()
         data = response.json()
 
