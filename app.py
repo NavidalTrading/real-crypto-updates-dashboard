@@ -43,7 +43,7 @@ def fetch_ohlcv_cmc(symbol, interval='1h', limit=100):
     start_date = int(start_time.timestamp())
     end_date = int(end_time.timestamp())
 
-    url = f"https://pro.api.coinmarketcap.com/v1/cryptocurrency/ohlcv/historical"
+    url = f"https://pro-api.coinmarketcap.com/v1/cryptocurrency/ohlcv/historical"
 
     params = {
         'symbol': symbol,
