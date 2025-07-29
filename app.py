@@ -298,13 +298,13 @@ def password_gate():
             password = st.text_input("Enter Password to continue:", type="password")
             submitted = st.form_submit_button("Submit")
            if submitted:
-if st.session_state.valid_password and password == st.session_state.valid_password:
-        st.session_state.access_granted = True
-        st.session_state.authenticated = True
-        st.session_state.auth_expiry = datetime.now() + timedelta(days=30)
-        st.success("✅ Access granted.")
-else:
-        st.error("❌ Incorrect password or upload payment proof first.")
+               if st.session_state.valid_password and password == st.session_state.valid_password:
+                   st.session_state.access_granted = True
+                   st.session_state.authenticated = True
+                   st.session_state.auth_expiry = datetime.now() + timedelta(days=30)
+                   st.success("✅ Access granted.")
+            else:
+                st.error("❌ Incorrect password or upload payment proof first.")
 
 
 
