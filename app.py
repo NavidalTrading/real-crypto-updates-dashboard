@@ -294,7 +294,7 @@ def password_gate():
     # When uploading payment proof for the first time
     if uploaded_file and st.session_state.valid_password is None:
         plan = extract_plan_from_filename(uploaded_file.name)
-       if plan:
+        if plan:
             st.session_state.user_plan = f"{plan} Plan"
             current_month = datetime.now().strftime("%B").lower()
             st.session_state.valid_password = f"realcrypto-{plan.lower()}-{current_month}"
