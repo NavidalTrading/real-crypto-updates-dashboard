@@ -315,18 +315,10 @@ def password_gate():
         st.info(f"Your password for **{current_month.capitalize()}** is: `{password}` Access valid for 30 days.")
 
 
-# If access not granted, force password check
+# Single call for password gate and stop if needed
 if not st.session_state.get("access_granted", False):
     password_gate()
     st.stop()
-
-
-
-# Enforce gate
-if not st.session_state.get("access_granted", False):
-    password_gate()
-    st.stop()# Only stop if password not yet provided
-
 
 # Theme switch
 mode = st.sidebar.radio("Theme Mode", [ "Light"])
