@@ -9,7 +9,7 @@ import time
 from datetime import datetime, timedelta 
 
 # Define start and end dates for CoinMarketCap API
-end_date = end_date - timedelta(days=1)
+end_date = timedelta(days=1)
 start_date = datetime.utcnow()
 
 symbol_map = {
