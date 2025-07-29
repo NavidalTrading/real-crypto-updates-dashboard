@@ -322,40 +322,6 @@ if not st.session_state.get("access_granted", False):
     st.success(f"✅ Crypto Daniel verified your **{st.session_state['user_plan']}** payment proof.")
     st.info(f"Your password for **{current_month.capitalize()}** is: `{st.session_state['valid_password']}` Access valid for 30 days.")
 
-    # Show password input field
-    if "access_granted" not in st.session_state:
-        st.session_state["access_granted"] = False
-
-    if not st.session_state["access_granted"]:
-        with st.form(key="password_form"):
-            password = st.text_input("Enter Password to continue:", type="password")
-            submitted = st.form_submit_button("Submit")
-
-            if submitted:
-                if "valid_password" not in st.session_state:
-                    st.error("⚠️ No valid password has been set. Please upload payment proof first.")
-                elif password == st.session_state["valid_password"]:
-                    st.session_state["access_granted"] = True
-                    st.success("✅ Access granted.")
-                    # DON'T use st.rerun() — this causes refresh → reset
-                else:
-                    st.error("❌ Incorrect password.")
-
-
-        # Store valid password and plan type in session
-        st.session_state.valid_password = password
-        st.session_state["user_plan"] = "Basic Plan"  # or "Pro Plan" based on condition
-
-
-        st.success(f"✅ Crypto Daniel verified your **{user_plan}** payment proof.")
-        st.info(f"Your password for **{current_month.capitalize()}** is: `{password}` Access valid for 30 days.")
-
-
-# Single call for password gate and stop if needed
-if not st.session_state.get("access_granted", False):
-    password_gate()
-    st.stop()
-
 # Theme switch
 mode = st.sidebar.radio("Theme Mode", [ "Light"])
 if mode == "Light":
