@@ -308,9 +308,10 @@ def password_gate():
 
         # Store valid password and plan type in session
         st.session_state.valid_password = password
-        st.session_state.user_plan = plan_type
+        st.session_state["user_plan"] = "Basic Plan"  # or "Pro Plan" based on condition
 
-        st.success(f"✅ Crypto Daniel verified your **{plan_type}** payment proof.")
+
+        st.success(f"✅ Crypto Daniel verified your **{user_plan}** payment proof.")
         st.info(f"Your password for **{current_month.capitalize()}** is: `{password}` Access valid for 30 days.")
 
 
