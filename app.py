@@ -337,6 +337,11 @@ def password_gate():
                  st.success("✅ Access granted.")
             else:
                  st.error("❌ Incorrect password.")
+               
+# Call it and stop app if not authenticated
+if not st.session_state.get("access_granted", False):
+    password_gate()
+    st.stop()
 
 # Theme switch
 mode = st.sidebar.radio("Theme Mode", [ "Light"])
