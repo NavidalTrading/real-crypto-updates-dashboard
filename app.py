@@ -253,18 +253,18 @@ def generate_signals(symbols):
     else:
                     final_signal = "MIXED"
 
-                entry_price = df["close"].iloc[-1]
-                tp = round(entry_price * 1.10, 4)
-                sl = round(entry_price * 0.95, 4)
-                leverage = "x10"
+        entry_price = df["close"].iloc[-1]
+        tp = round(entry_price * 1.10, 4)
+        sl = round(entry_price * 0.95, 4)
+        leverage = "x10"
 
-                results.append([
-                    symbol,
-                    round(entry_price, 4),
-                    f"{tp} / {sl}",
-                    leverage,
-                    final_signal
-                ])
+        results.append([
+            symbol,
+            round(entry_price, 4),
+            f"{tp} / {sl}",
+            leverage,
+            final_signal
+        ])
             except Exception as e:
                 st.error(f"⚠️ Error for {symbol}: {e}")
                 results.append([
