@@ -262,7 +262,8 @@ def extract_plan_from_filename(filename):
     elif "pro" in fname:
         return "Pro"
     return None
- def password_gate():
+ 
+def password_gate():
     st.title("🔒 Enter Password to Access Dashboard")
 
     # Upload file section (Always visible)
