@@ -32,13 +32,12 @@ def fetch_ohlcv_cmc(symbol, start_date, end_date):
         url = f"https://pro-api.coinmarketcap.com/v1/cryptocurrency/ohlcv/historical?symbol={symbol}&convert=USD&time_start={start_date}&time_end={end_date}"
         headers = {
             "Accepts": "application/json",
-            "authorization": CMC_PRO_API_KEY
+            "X-CMC_PRO_API_KEY": authorization
         }
         response = requests.get(url, headers=headers)
         response.raise_for_status()
         data = response.json()
 
-        # Transform response into DataFrame if needed
         prices = data["data"]["quotes"]
         df = pd.DataFrame([{
             "timestamp": q["timestamp"],
@@ -55,6 +54,7 @@ def fetch_ohlcv_cmc(symbol, start_date, end_date):
     except Exception as e:
         st.warning(f"⚠️ Error fetching data for {symbol}: {e}")
         return None
+
 
 
 
