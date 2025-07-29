@@ -292,25 +292,21 @@ def password_gate():
         st.success(f"✅ Crypto Daniel verified your **{plan_type}** payment proof.")
         st.info(f"Your password for **{current_month.capitalize()}** is: `{password}` Access valid for 30 days.")
 
-    # Show password input only if access not yet granted
-if "access_granted" not in st.session_state:
-    st.session_state.access_granted = False
+    # Show password form only if not granted
+    if not st.session_state.get("access_granted", False):
+        with st.form(key="password_form"):
+            password = st.text_input("Enter Password to continue:", type="password")
+            submitted = st.form_submit_button("Submit")
+            if submitted:
+                if password == st.session_state.get("valid_password", ""):
+                    st.session_state.access_granted = True
+                    st.session_state.authenticated = True
+                    st.session_state.auth_expiry = datetime.now() + timedelta(days=30)
+                    st.success("✅ Access granted.")
+                    st.rerun()
+                else:
+                    st.error("❌ Incorrect password.")
 
-if "authenticated" not in st.session_state:
-    st.session_state.authenticated = False
-
-if not st.session_state.access_granted:
-    def validate_password():
-        if st.session_state.get("password_input", "") == st.session_state.get("valid_password", ""):
-            st.session_state.access_granted = True
-            st.session_state.authenticated = True
-            st.session_state.auth_expiry = datetime.now() + timedelta(days=30)
-            st.success("✅ Access granted.")
-            st.rerun()
-        else:
-            st.error("❌ Incorrect password.")
-
-    st.text_input("Password", type="password", key="password_input", on_change=validate_password)
 
 # Re-check validity
 if st.session_state.get("authenticated", False):
