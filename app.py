@@ -231,6 +231,14 @@ def generate_signals(symbols):
     else:
         signal = "Symbol not mapped"
 
+    # ➕ Add this result to your final table (adjust if needed)
+    signals_data.append({
+        'symbol': pair,
+        'entry': df['close'].iloc[-1] if df is not None and not df.empty else '-',
+        'tp_sl': f"{round(df['close'].iloc[-1] * 1.1, 4)} / {round(df['close'].iloc[-1] * 0.95, 4)}" if df is not None and not df.empty else '-',
+        'leverage': "5x",
+        'signal': signal
+    })
                 df = calculate_ichimoku(df)
                 ichimoku = ichimoku_signal(df)
                 pivot = pivot_play_signal(df)
