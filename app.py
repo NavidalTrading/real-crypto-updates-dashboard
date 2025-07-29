@@ -23,42 +23,39 @@ symbol_map = {
     'QNT': 'QNT'
 }
 
-CMC_API_KEY = "c75c8f96-f121-46bf-82f7-5dab19eced12"
+# Securely access the CoinMarketCap API key from Streamlit secrets
+CMC_API_KEY = st.secrets["api"]["CMC_API_KEY"]
 
 
-def fetch_ohlcv_coinmarketcap(symbol):
+def fetch_ohlcv_cmc(symbol, start_date, end_date):
     try:
+        url = f"https://pro-api.coinmarketcap.com/v1/cryptocurrency/ohlcv/historical?symbol={symbol}&convert=USD&time_start={start_date}&time_end={end_date}"
         headers = {
-            'Accepts': 'application/json',
-            'X-CMC_PRO_API_KEY': CMC_API_KEY,
+            "Accepts": "application/json",
+            "X-CMC_PRO_API_KEY": CMC_API_KEY
         }
-        url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/ohlcv/historical"
-        params = {
-            "symbol": symbol,
-            "convert": "USD",
-            "time_start": start_date.isoformat(),
-            "time_end": end_date.isoformat()
-        }
-
-        response = requests.get(url, headers=headers, params=params)
+        response = requests.get(url, headers=headers)
         response.raise_for_status()
         data = response.json()
 
-        prices = data['data']['quotes']
+        # Transform response into DataFrame if needed
+        prices = data["data"]["quotes"]
         df = pd.DataFrame([{
-            'timestamp': pd.to_datetime(q['timestamp']),
-            'open': q['quote']['USD']['open'],
-            'high': q['quote']['USD']['high'],
-            'low': q['quote']['USD']['low'],
-            'close': q['quote']['USD']['close'],
-            'volume': q['quote']['USD']['volume'],
+            "timestamp": q["timestamp"],
+            "open": q["quote"]["USD"]["open"],
+            "high": q["quote"]["USD"]["high"],
+            "low": q["quote"]["USD"]["low"],
+            "close": q["quote"]["USD"]["close"],
+            "volume": q["quote"]["USD"]["volume"]
         } for q in prices])
-
-        df.set_index('timestamp', inplace=True)
+        df["timestamp"] = pd.to_datetime(df["timestamp"])
+        df.set_index("timestamp", inplace=True)
         return df
+
     except Exception as e:
-        st.error(f"⚠️ Error for {symbol}: {e}")
+        st.warning(f"⚠️ Error fetching data for {symbol}: {e}")
         return None
+
 
 
 
