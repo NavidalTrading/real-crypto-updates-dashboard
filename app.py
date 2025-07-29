@@ -287,6 +287,11 @@ def password_gate():
     if "valid_password" not in st.session_state:
         uploaded_file = st.file_uploader("Upload Payment Proof", type=["png", "jpg", "jpeg", "pdf"], key="payment_upload")
 
+    # Show password form
+    with st.form("password_form"):
+        password = st.text_input("Enter Password to continue:", type="password")
+        submitted = st.form_submit_button("Submit")
+
         if uploaded_file:
             filename = uploaded_file.name.lower()
             current_month = datetime.now().strftime("%B").lower()
