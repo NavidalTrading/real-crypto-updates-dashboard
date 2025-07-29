@@ -314,7 +314,8 @@ if st.session_state.get("authenticated", False):
         st.session_state["authenticated"] = False
         st.session_state["access_granted"] = False
         st.warning("⚠️ Your session expired. Please re-authenticate.")
-        st.rerun()
+        st.warning("🔒 Session expired. Please upload payment proof again.")
+
 
 
 # Enforce gate
