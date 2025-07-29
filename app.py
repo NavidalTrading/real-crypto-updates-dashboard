@@ -206,13 +206,30 @@ def signal_generator(df):
 def generate_signals(symbols):
     results = []
 
-    for symbol in symbols:
-        cg_symbol = symbol_map.get(symbol, "")
-        if cg_symbol:
-            try:
-                df = fetch_ohlcv_coinmarketcap(cg_symbol)
-                if df is None or len(df) < 52:
-                    raise Exception("Insufficient data")
+    for pair in pairs:
+    cg_symbol = symbol_map.get(pair.replace("USDC", ""), None)
+    if cg_symbol:
+        try:
+            df = fetch_ohlcv_cmc(cg_symbol, start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'))
+            if df is not None and not df.empty:
+                ichimoku = calculate_ichimoku(df)
+                pivot = calculate_pivot_signal(df)
+
+                if ichimoku == "BUY" and pivot == "BUY":
+                    signal = "STRONG BUY ✅"
+                elif ichimoku == "SELL" and pivot == "SELL":
+                    signal = "STRONG SELL ❌"
+                elif ichimoku == pivot:
+                    signal = f"WEAK {ichimoku}"
+                else:
+                    signal = "NO SIGNAL"
+            else:
+                signal = "Insufficient data"
+        except Exception as e:
+            st.warning(f"⚠️ Error for {pair}: {e}")
+            signal = "Error fetching"
+    else:
+        signal = "Symbol not mapped"
 
                 df = calculate_ichimoku(df)
                 ichimoku = ichimoku_signal(df)
