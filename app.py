@@ -84,10 +84,6 @@ def fetch_ohlcv_cmc(symbol, interval='1h', limit=100):
         st.error(f"⚠️ Error fetching data for {symbol}: {e}")
         return None
 
-
-
-
-
 def ichimoku_signal(df):
     high_9 = df["high"].rolling(window=9).max()
     low_9 = df["low"].rolling(window=9).min()
@@ -341,12 +337,6 @@ def password_gate():
                  st.success("✅ Access granted.")
             else:
                  st.error("❌ Incorrect password.")
-
-
-# Call it and stop app if not authenticated
-if not st.session_state.get("access_granted", False):
-    password_gate()
-    st.stop()
 
 # Theme switch
 mode = st.sidebar.radio("Theme Mode", [ "Light"])
