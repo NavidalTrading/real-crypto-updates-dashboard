@@ -303,8 +303,8 @@ def password_gate():
            st.session_state.authenticated = True
            st.session_state.auth_expiry = datetime.now() + timedelta(days=30)
            st.success("✅ Access granted.")
-      else:
-        st.error("❌ Incorrect password or upload payment proof first.")
+        else:
+           st.error("❌ Incorrect password or upload payment proof first.")
 
 
 
