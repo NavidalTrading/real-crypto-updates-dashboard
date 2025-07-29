@@ -27,7 +27,7 @@ symbol_map = {
 authorization = st.secrets["CMC_PRO_API_KEY"]
 
 
-def fetch_ohlcv_cmc(symbol):
+def fetch_ohlcv_cmc(symbol, interval='1h', limit=100):
     import requests
     from datetime import datetime, timedelta
 
