@@ -207,7 +207,7 @@ def generate_signals(symbols):
     results = []
 
     for pair in pairs:
-    cg_symbol = symbol_map.get(pair.replace("USDC", ""), None)
+        cg_symbol = symbol_map.get(pair.replace("USDC", ""), None)
     if cg_symbol:
         try:
             df = fetch_ohlcv_cmc(cg_symbol, start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'))
