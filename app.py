@@ -294,7 +294,7 @@ def password_gate():
     # When uploading payment proof for the first time
     if uploaded_file and st.session_state.valid_password is None:
         plan = extract_plan_from_filename(uploaded_file.name)
-      '''  if plan:
+       if plan:
             st.session_state.user_plan = f"{plan} Plan"
             current_month = datetime.now().strftime("%B").lower()
             st.session_state.valid_password = f"realcrypto-{plan.lower()}-{current_month}"
@@ -302,7 +302,7 @@ def password_gate():
             st.success(f"✅ Crypto Daniel verified your **{st.session_state.user_plan}** payment proof.")
             st.info(f"Your password for **{current_month.capitalize()}** is: `{st.session_state.valid_password}` Access valid for 30 days.")
         else:
-            st.error("❌ Filename must include 'basic' or 'pro' to determine plan.") '''
+            st.error("❌ Filename must include 'basic' or 'pro' to determine plan.") 
 
     # Show password form
     with st.form("password_form"):
