@@ -29,7 +29,7 @@ CMC_API_KEY = st.secrets["api"]["CMC_API_KEY"]
 
 def fetch_ohlcv_cmc(symbol, start_date, end_date):
     try:
-        url = f"https://pro-api.coinmarketcap.com/v1/cryptocurrency/ohlcv/historical?symbol={symbol}&convert=USD&time_start={start_date}&time_end={end_date}"
+        url = f"https://pro-api.coinmarketcap.com/v1/cryptocurrency/ohlcv/historical?CMC_PRO_API_KEY =c75c8f96-f121-46bf-82f7-5dab19eced12symbol={symbol}&convert=USD&time_start={start_date}&time_end={end_date}"
         headers = {
             "Accepts": "application/json",
             "X-CMC_PRO_API_KEY": CMC_API_KEY
