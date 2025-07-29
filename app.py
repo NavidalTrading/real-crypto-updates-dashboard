@@ -300,10 +300,9 @@ def password_gate():
 if not st.session_state.get("access_granted", False):
     password_gate()
     st.stop()
-
-
-        st.success(f"✅ Crypto Daniel verified your **{st.session_state['user_plan']}** payment proof.")
-        st.info(f"Your password for **{current_month.capitalize()}** is: `{st.session_state['valid_password']}` Access valid for 30 days.")
+    
+    st.success(f"✅ Crypto Daniel verified your **{st.session_state['user_plan']}** payment proof.")
+    st.info(f"Your password for **{current_month.capitalize()}** is: `{st.session_state['valid_password']}` Access valid for 30 days.")
 
     # Show password input field
     if "access_granted" not in st.session_state:
