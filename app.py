@@ -24,7 +24,7 @@ symbol_map = {
 }
 
 # Securely access the CoinMarketCap API key from Streamlit secrets
-CMC_PRO_API_KEY = st.secrets["api"]["CMC_PRO_API_KEY"]
+"authorization" = st.secrets["CMC_PRO_API_KEY"]
 
 
 def fetch_ohlcv_cmc(symbol, start_date, end_date):
@@ -32,7 +32,7 @@ def fetch_ohlcv_cmc(symbol, start_date, end_date):
         url = f"https://pro-api.coinmarketcap.com/v1/cryptocurrency/ohlcv/historical?symbol={symbol}&convert=USD&time_start={start_date}&time_end={end_date}"
         headers = {
             "Accepts": "application/json",
-            "X-CMC_PRO_API_KEY": CMC_PRO_API_KEY
+            "authorization": CMC_PRO_API_KEY
         }
         response = requests.get(url, headers=headers)
         response.raise_for_status()
