@@ -292,30 +292,32 @@ def password_gate():
         st.success(f"✅ Crypto Daniel verified your **{plan_type}** payment proof.")
         st.info(f"Your password for **{current_month.capitalize()}** is: `{password}` Access valid for 30 days.")
 
-    # Show password form only if not granted
-    if not st.session_state.get("access_granted", False):
+    # Show password gate only if access hasn't been granted
+def password_gate():
+    if "access_granted" not in st.session_state:
+        st.session_state.access_granted = False
+
+    if not st.session_state.access_granted:
         with st.form(key="password_form"):
             password = st.text_input("Enter Password to continue:", type="password")
             submitted = st.form_submit_button("Submit")
-    if submitted:
-        if st.session_state.valid_password and password == st.session_state.valid_password:
-           st.session_state.access_granted = True
-           st.session_state.authenticated = True
-           st.session_state.auth_expiry = datetime.now() + timedelta(days=30)
-           st.success("✅ Access granted.")
-        else:
-           st.error("❌ Incorrect password or upload payment proof first.")
+            if submitted:
+                valid_password = st.session_state.get("valid_password", None)
 
+                # fallback if no password was generated yet
+                if not valid_password:
+                    st.error("⚠️ No valid password has been set. Please upload payment proof first.")
+                elif password == valid_password:
+                    st.session_state.access_granted = True
+                    st.success("✅ Access granted.")
+                    st.rerun()
+                else:
+                    st.error("❌ Incorrect password.")
 
-
-
-# Re-check validity
-if st.session_state.get("authenticated", False):
-    if st.session_state.get("auth_expiry") and datetime.now() > st.session_state["auth_expiry"]:
-        st.session_state["authenticated"] = False
-        st.session_state["access_granted"] = False
-        st.warning("⚠️ Your session expired. Please re-authenticate.")
-        st.warning("🔒 Session expired. Please upload payment proof again.")
+# If access not granted, force password check
+if not st.session_state.get("access_granted", False):
+    password_gate()
+    st.stop()
 
 
 
