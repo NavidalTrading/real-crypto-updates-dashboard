@@ -287,11 +287,6 @@ def password_gate():
     if "valid_password" not in st.session_state:
         uploaded_file = st.file_uploader("Upload Payment Proof", type=["png", "jpg", "jpeg", "pdf"], key="payment_upload")
 
-    # Show password form
-    with st.form("password_form"):
-        password = st.text_input("Enter Password to continue:", type="password")
-        submitted = st.form_submit_button("Submit")
-
         if uploaded_file:
             filename = uploaded_file.name.lower()
             current_month = datetime.now().strftime("%B").lower()
@@ -309,6 +304,11 @@ def password_gate():
             st.success(f"✅ Crypto Daniel verified your **{st.session_state.user_plan}** payment proof.")
             st.info(f"Your password for **{current_month.capitalize()}** is: `{st.session_state.valid_password}` (valid for 30 days)")
 
+    # Show password form
+    with st.form("password_form"):
+        password = st.text_input("Enter Password to continue:", type="password")
+        submitted = st.form_submit_button("Submit")
+  
     # Show password form if not granted access
     if not st.session_state.get("access_granted", False):
         with st.form(key="password_form"):
