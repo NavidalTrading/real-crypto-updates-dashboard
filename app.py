@@ -279,7 +279,7 @@ def password_gate():
             current_month = datetime.now().strftime("%B").lower()
             st.session_state.valid_password = f"realcrypto-{plan.lower()}-{current_month}"
             st.success(f"✅ Crypto Daniel verified your **{st.session_state.user_plan}** payment proof.")
-            st.info(f"Your password for **{current_month.capitalize()}** is: `{st.session_state.valid_password}`")
+            st.info(f"Your password for **{current_month.capitalize()}** is: `{st.session_state.valid_password}`Access valid for 30 days.")
         else:
             st.error("❌ Filename must include 'basic' or 'pro' to determine plan.")
 
