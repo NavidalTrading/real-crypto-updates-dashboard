@@ -240,8 +240,8 @@ def generate_signals(symbols):
         'signal': signal
     })
     df = calculate_ichimoku(df)
-        ichimoku = ichimoku_signal(df)
-        pivot = pivot_play_signal(df)
+    ichimoku = ichimoku_signal(df)
+    pivot = pivot_play_signal(df)
 
                # Combine both signals
                 if ichimoku == "BUY" and pivot == "BUY":
