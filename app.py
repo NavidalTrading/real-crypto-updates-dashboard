@@ -205,77 +205,48 @@ def signal_generator(df):
 
 def generate_signals(symbols):
     results = []
+    for symbol in symbols:
+        cg_symbol = symbol_map.get(symbol, None)
+        if cg_symbol:
+            try:
+                df = fetch_ohlcv_cmc(cg_symbol, start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'))
+                if df is not None and not df.empty:
+                    df = calculate_ichimoku(df)
+                    ichimoku = ichimoku_signal(df)
+                    pivot = pivot_play_signal(df)
 
-    for pair in pairs:
-        cg_symbol = symbol_map.get(pair.replace("USDC", ""), None)
-    if cg_symbol:
-        try:
-            df = fetch_ohlcv_cmc(cg_symbol, start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'))
-            if df is not None and not df.empty:
-                ichimoku = calculate_ichimoku(df)
-                pivot = calculate_pivot_signal(df)
+                    # Combine both signals
+                    if ichimoku == "BUY" and pivot == "BUY":
+                        final_signal = "STRONG BUY ✅"
+                    elif ichimoku == "SELL" and pivot == "SELL":
+                        final_signal = "STRONG SELL ❌"
+                    elif ichimoku == pivot:
+                        final_signal = f"WEAK {ichimoku}"
+                    else:
+                        final_signal = "NO SIGNAL"
 
-                if ichimoku == "BUY" and pivot == "BUY":
-                    signal = "STRONG BUY ✅"
-                elif ichimoku == "SELL" and pivot == "SELL":
-                    signal = "STRONG SELL ❌"
-                elif ichimoku == pivot:
-                    signal = f"WEAK {ichimoku}"
+                    entry_price = df["close"].iloc[-1]
+                    tp = round(entry_price * 1.10, 4)
+                    sl = round(entry_price * 0.95, 4)
+                    leverage = "x10"
+
+                    results.append([
+                        symbol,
+                        round(entry_price, 4),
+                        f"{tp} / {sl}",
+                        leverage,
+                        final_signal
+                    ])
                 else:
-                    signal = "NO SIGNAL"
-            else:
-                signal = "Insufficient data"
-        except Exception as e:
-            st.warning(f"⚠️ Error for {pair}: {e}")
-            signal = "Error fetching"
-    else:
-        signal = "Symbol not mapped"
+                    results.append([symbol, "-", "-", "-", "Insufficient data"])
+            except Exception as e:
+                st.error(f"⚠️ Error for {symbol}: {e}")
+                results.append([symbol, "-", "-", "-", "Error fetching"])
+        else:
+            results.append([symbol, "-", "-", "-", "Symbol not found"])
 
-    # ➕ Add this result to your final table (adjust if needed)
-    signals_data.append({
-        'symbol': pair,
-        'entry': df['close'].iloc[-1] if df is not None and not df.empty else '-',
-        'tp_sl': f"{round(df['close'].iloc[-1] * 1.1, 4)} / {round(df['close'].iloc[-1] * 0.95, 4)}" if df is not None and not df.empty else '-',
-        'leverage': "5x",
-        'signal': signal
-    })
-    df = calculate_ichimoku(df)
-    ichimoku = ichimoku_signal(df)
-    pivot = pivot_play_signal(df)
+    return pd.DataFrame(results, columns=["Symbol", "Entry Price", "TP / SL", "Leverage", "Signal"])
 
-               # Combine both signals
-    if ichimoku == "BUY" and pivot == "BUY":
-                    final_signal = "STRONG BUY"
-    elif ichimoku == "SELL" and pivot == "SELL":
-                    final_signal = "STRONG SELL"
-    elif ichimoku == "HOLD" or pivot == "HOLD":
-                    final_signal = "HOLD"
-    else:
-                    final_signal = "MIXED"
-
-    entry_price = df["close"].iloc[-1]
-    tp = round(entry_price * 1.10, 4)
-    sl = round(entry_price * 0.95, 4)
-    leverage = "x10"
-
-    results.append([
-        symbol,
-        round(entry_price, 4),
-        f"{tp} / {sl}",
-        leverage,
-        final_signal
-    ])
-except Exception as e:
-    st.error(f"⚠️ Error for {symbol}: {e}")
-    results.append([
-        symbol, "-", "-", "-", "Error fetching"
-    ])
-else:
-results.append([
-    symbol, "-", "-", "-", "Symbol not found"
-])
-
-return pd.DataFrame(results, columns=["Symbol", "Entry Price", "TP / SL", "Leverage", "Signal"])
 
 # Initialize login state
 if "authenticated" not in st.session_state:
