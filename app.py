@@ -34,8 +34,7 @@ def fetch_ohlcv_cmc(symbol, start_date, end_date):
             "Accepts": "application/json",
             "X-CMC_PRO_API_KEY": authorization
         }
-       response = requests.get(url, headers=headers, params=params)
-
+   response = requests.get(url, headers=headers, params=params)
 if response.status_code != 200:
     st.warning(f"⚠️ API returned {response.status_code} for {symbol}: {response.text}")
     return None
