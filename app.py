@@ -239,7 +239,7 @@ def generate_signals(symbols):
         'leverage': "5x",
         'signal': signal
     })
-        df = calculate_ichimoku(df)
+                            df = calculate_ichimoku(df)
         ichimoku = ichimoku_signal(df)
         pivot = pivot_play_signal(df)
 
