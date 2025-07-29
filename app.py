@@ -280,65 +280,54 @@ if "authenticated" not in st.session_state:
 if "auth_expiry" not in st.session_state:
     st.session_state["auth_expiry"] = None
 
-# ~ Line 283 onward
-def extract_plan_from_filename(filename):
-    fname = filename.lower()
-    if "basic" in fname:
-        return "Basic"
-    elif "pro" in fname:
-        return "Pro"
-    return None
-
 def password_gate():
     st.title("🔒 Enter Password to Access Dashboard")
 
+    # Show upload only if password is not already known
     if "valid_password" not in st.session_state:
-        st.session_state.valid_password = None
+        uploaded_file = st.file_uploader("Upload Payment Proof", type=["png", "jpg", "jpeg", "pdf"], key="payment_upload")
 
-    if "user_plan" not in st.session_state:
-        st.session_state.user_plan = None
-
-    if "access_granted" not in st.session_state:
-        st.session_state.access_granted = False
-
-    if "password_expiry" not in st.session_state:
-        st.session_state.password_expiry = None
-
-    uploaded_file = st.file_uploader("Upload Payment Proof", type=["png", "jpg", "jpeg", "pdf"], key="payment_upload")
-
-    # When uploading payment proof for the first time
-    if uploaded_file and st.session_state.valid_password is None:
-        plan = extract_plan_from_filename(uploaded_file.name)
-        if plan:
-            st.session_state.user_plan = f"{plan} Plan"
+        if uploaded_file:
+            filename = uploaded_file.name.lower()
             current_month = datetime.now().strftime("%B").lower()
-            st.session_state.valid_password = f"realcrypto-{plan.lower()}-{current_month}"
-            st.session_state.password_expiry = datetime.now() + timedelta(days=30)
-            st.success(f"✅ Crypto Daniel verified your **{st.session_state.user_plan}** payment proof.")
-            st.info(f"Your password for **{current_month.capitalize()}** is: `{st.session_state.valid_password}` Access valid for 30 days.")
-        else:
-            st.error("❌ Filename must include 'basic' or 'pro' to determine plan.") 
 
-    # Show password form
-    with st.form("password_form"):
-        password = st.text_input("Enter Password to continue:", type="password")
-        submitted = st.form_submit_button("Submit")
-
-        if submitted:
-            if st.session_state.valid_password is None and not uploaded_file:
-                 st.error("⚠️ Please upload your payment proof first.")
-            elif  st.session_state.password_expiry and datetime.now() > st.session_state.password_expiry:
-                 st.error("⏰ Password expired. Please re-upload your payment proof to receive a new one.")
-                 st.session_state.access_granted = False
-                 st.session_state.valid_password = None
-                 st.session_state.password_expiry = None
-            elif password == st.session_state.valid_password:
-                 st.session_state.access_granted = True
-                 st.success("✅ Access granted.")
+            if "pro" in filename:
+                st.session_state.user_plan = "Pro Plan"
+                st.session_state.valid_password = f"realcrypto-pro-{current_month}"
+            elif "basic" in filename:
+                st.session_state.user_plan = "Basic Plan"
+                st.session_state.valid_password = f"realcrypto-basic-{current_month}"
             else:
-                 st.error("❌ Incorrect password.")
+                st.error("❌ Could not determine plan from filename. Use 'basic' or 'pro' in the file name.")
+                return
+
+            st.success(f"✅ Crypto Daniel verified your **{st.session_state.user_plan}** payment proof.")
+            st.info(f"Your password for **{current_month.capitalize()}** is: `{st.session_state.valid_password}` (valid for 30 days)")
+
+    # Show password form if not granted access
+    if not st.session_state.get("access_granted", False):
+        with st.form(key="password_form"):
+            password = st.text_input("Enter Password to continue:", type="password")
+            submitted = st.form_submit_button("Submit")
+            if submitted:
+                if password == st.session_state.get("valid_password", ""):
+                    st.session_state.access_granted = True
+                    st.session_state.authenticated = True
+                    st.session_state.auth_expiry = datetime.now() + timedelta(days=30)
+                    st.success("✅ Access granted.")
+                    # ⛔️ Do NOT rerun
+                else:
+                    st.error("❌ Incorrect password.")
+
                
-# Call it and stop app if not authenticated
+# Re-check validity
+if st.session_state.get("authenticated", False):
+    if st.session_state.get("auth_expiry") and datetime.now() > st.session_state["auth_expiry"]:
+        st.session_state["authenticated"] = False
+        st.session_state["access_granted"] = False
+        st.warning("⚠️ Your session expired. Please re-authenticate.")
+
+# Enforce gate
 if not st.session_state.get("access_granted", False):
     password_gate()
     st.stop()
