@@ -27,42 +27,61 @@ symbol_map = {
 authorization = st.secrets["CMC_PRO_API_KEY"]
 
 
-def fetch_ohlcv_cmc(symbol, start_date, end_date):
+def fetch_ohlcv_coinmarketcap(symbol):
+    import requests
+    from datetime import datetime, timedelta
+
+    CMC_PRO_API_KEY = st.secrets.get("CMC_PRO_API_KEY")
+    headers = {
+        'Accepts': 'application/json',
+        'X-CMC_PRO_API_KEY': authorization
+    }
+
+    # Define start and end times
+    end_time = datetime.utcnow()
+    start_time = end_time - timedelta(days=1)
+    start_date = int(start_time.timestamp())
+    end_date = int(end_time.timestamp())
+
+    url = f"https://pro.api.coinmarketcap.com/v1/cryptocurrency/ohlcv/historical"
+
+    params = {
+        'symbol': symbol,
+        'convert': 'USD',
+        'time_start': start_date,
+        'time_end': end_date,
+        'interval': 'hourly'
+    }
+
     try:
-        url = f"https://pro.coinmarketcap.com/v1/cryptocurrency/ohlcv/historical?symbol={symbol}&convert=USD&time_start={start_date}&time_end={end_date}"
-        headers = {
-            "Accepts": "application/json",
-            "X-CMC_PRO_API_KEY": authorization
-        }
         response = requests.get(url, headers=headers, params=params)
+
         if response.status_code != 200:
             st.warning(f"⚠️ API returned {response.status_code} for {symbol}: {response.text}")
-        return None
+            return None
 
-        try:
-            data = response.json()
-        except Exception as e:
-            st.error(f"⚠️ Error fetching data for {symbol}: {e}")
-        return None
-
-        response.raise_for_status()
         data = response.json()
 
-        prices = data["data"]["quotes"]
+        if "data" not in data or "quotes" not in data["data"]:
+            st.warning(f"⚠️ No OHLCV data found for {symbol}")
+            return None
+
+        ohlcv_data = data["data"]["quotes"]
+
         df = pd.DataFrame([{
-            "timestamp": q["timestamp"],
-            "open": q["quote"]["USD"]["open"],
-            "high": q["quote"]["USD"]["high"],
-            "low": q["quote"]["USD"]["low"],
-            "close": q["quote"]["USD"]["close"],
-            "volume": q["quote"]["USD"]["volume"]
-        } for q in prices])
-        df["timestamp"] = pd.to_datetime(df["timestamp"])
-        df.set_index("timestamp", inplace=True)
+            'timestamp': datetime.strptime(item['time_open'], "%Y-%m-%dT%H:%M:%S.%fZ"),
+            'open': item['quote']['USD']['open'],
+            'high': item['quote']['USD']['high'],
+            'low': item['quote']['USD']['low'],
+            'close': item['quote']['USD']['close'],
+            'volume': item['quote']['USD']['volume']
+        } for item in ohlcv_data])
+
+        df.set_index('timestamp', inplace=True)
         return df
 
     except Exception as e:
-        st.warning(f"⚠️ Error fetching data for {symbol}: {e}")
+        st.error(f"⚠️ Error fetching data for {symbol}: {e}")
         return None
 
 
