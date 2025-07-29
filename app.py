@@ -290,7 +290,7 @@ def extract_plan_from_filename(filename):
     return None
 
 def password_gate():
-    st.title("style='text-align: center;🔒 Enter Password to Access Dashboard")
+    st.title(<h1 style='text-align: center;'>🔒 Enter Password to Access Dashboard"</h1>)
 
     if "valid_password" not in st.session_state:
         st.session_state.valid_password = None
