@@ -244,13 +244,13 @@ def generate_signals(symbols):
     pivot = pivot_play_signal(df)
 
                # Combine both signals
-        if ichimoku == "BUY" and pivot == "BUY":
+    if ichimoku == "BUY" and pivot == "BUY":
                     final_signal = "STRONG BUY"
-        elif ichimoku == "SELL" and pivot == "SELL":
+    elif ichimoku == "SELL" and pivot == "SELL":
                     final_signal = "STRONG SELL"
-        elif ichimoku == "HOLD" or pivot == "HOLD":
+    elif ichimoku == "HOLD" or pivot == "HOLD":
                     final_signal = "HOLD"
-        else:
+    else:
                     final_signal = "MIXED"
 
                 entry_price = df["close"].iloc[-1]
