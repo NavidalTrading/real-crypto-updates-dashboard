@@ -9,8 +9,8 @@ import time
 from datetime import datetime, timedelta 
 
 # Define start and end dates for CoinMarketCap API
-end_date = timedelta(days=1)
-start_date = datetime.utcnow()
+end_date = datetime.utcnow()
+start_date = end_date - timedelta(days=1)
 
 symbol_map = {
     'XRP': 'XRP',
