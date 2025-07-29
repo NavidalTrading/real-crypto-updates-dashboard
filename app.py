@@ -300,18 +300,18 @@ def password_gate():
         submitted = st.form_submit_button("Submit")
 
         if submitted:
-            if st.session_state.valid_password is None:
-                st.error("⚠️ Please upload your payment proof first.")
-            elif st.session_state.password_expiry and datetime.now() > st.session_state.password_expiry:
-                st.error("⏰ Password expired. Please re-upload your payment proof to receive a new one.")
-                st.session_state.access_granted = False
-                st.session_state.valid_password = None
-                st.session_state.password_expiry = None
+            if st.session_state.valid_password is None and not uploaded_file:
+                 st.error("⚠️ Please upload your payment proof first.")
+            elif  st.session_state.password_expiry and datetime.now() > st.session_state.password_expiry:
+                 st.error("⏰ Password expired. Please re-upload your payment proof to receive a new one.")
+                 st.session_state.access_granted = False
+                 st.session_state.valid_password = None
+                 st.session_state.password_expiry = None
             elif password == st.session_state.valid_password:
-                st.session_state.access_granted = True
-                st.success("✅ Access granted.")
+                 st.session_state.access_granted = True
+                 st.success("✅ Access granted.")
             else:
-                st.error("❌ Incorrect password.")
+                 st.error("❌ Incorrect password.")
 
 
 # Call it and stop app if not authenticated
