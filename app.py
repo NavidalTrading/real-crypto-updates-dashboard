@@ -27,7 +27,7 @@ symbol_map = {
 authorization = st.secrets["CMC_PRO_API_KEY"]
 
 
-def fetch_ohlcv_coinmarketcap(symbol):
+def fetch_ohlcv_cmc(symbol):
     import requests
     from datetime import datetime, timedelta
 
