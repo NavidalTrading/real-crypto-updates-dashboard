@@ -293,25 +293,33 @@ def password_gate():
         st.info(f"Your password for **{current_month.capitalize()}** is: `{password}` Access valid for 30 days.")
 
     # Show password input only if access not yet granted
-    if "access_granted" not in st.session_state:
-        st.session_state.access_granted = False
+if "access_granted" not in st.session_state:
+    st.session_state.access_granted = False
 
-    if not st.session_state.access_granted:
-        password = st.text_input("Password", type="password")
-        if st.button("Submit"):
-            if password == st.session_state.get("valid_password", ""):
-                st.session_state.access_granted = True
-                st.success("✅ Access granted.")
-                st.rerun()
-            else:
-                st.error("❌ Incorrect password.")
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+
+if not st.session_state.access_granted:
+    def validate_password():
+        if st.session_state.get("password_input", "") == st.session_state.get("valid_password", ""):
+            st.session_state.access_granted = True
+            st.session_state.authenticated = True
+            st.session_state.auth_expiry = datetime.now() + timedelta(days=30)
+            st.success("✅ Access granted.")
+            st.rerun()
+        else:
+            st.error("❌ Incorrect password.")
+
+    st.text_input("Password", type="password", key="password_input", on_change=validate_password)
 
 # Re-check validity
-if st.session_state["authenticated"]:
-    if st.session_state["auth_expiry"] and datetime.now() > st.session_state["auth_expiry"]:
+if st.session_state.get("authenticated", False):
+    if st.session_state.get("auth_expiry") and datetime.now() > st.session_state["auth_expiry"]:
         st.session_state["authenticated"] = False
+        st.session_state["access_granted"] = False
         st.warning("⚠️ Your session expired. Please re-authenticate.")
         st.rerun()
+
 
 # Enforce gate
 if not st.session_state.get("access_granted", False):
