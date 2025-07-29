@@ -265,17 +265,17 @@ def generate_signals(symbols):
         leverage,
         final_signal
     ])
-            except Exception as e:
-                st.error(f"⚠️ Error for {symbol}: {e}")
-                results.append([
-                    symbol, "-", "-", "-", "Error fetching"
-                ])
-        else:
-            results.append([
-                symbol, "-", "-", "-", "Symbol not found"
-            ])
+except Exception as e:
+    st.error(f"⚠️ Error for {symbol}: {e}")
+    results.append([
+        symbol, "-", "-", "-", "Error fetching"
+    ])
+else:
+results.append([
+    symbol, "-", "-", "-", "Symbol not found"
+])
 
-    return pd.DataFrame(results, columns=["Symbol", "Entry Price", "TP / SL", "Leverage", "Signal"])
+return pd.DataFrame(results, columns=["Symbol", "Entry Price", "TP / SL", "Leverage", "Signal"])
 
 # Initialize login state
 if "authenticated" not in st.session_state:
