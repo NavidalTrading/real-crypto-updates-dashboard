@@ -272,14 +272,6 @@ def generate_signals(symbols):
 
     return pd.DataFrame(results, columns=["Symbol", "Entry Price", "TP / SL", "Leverage", "Signal"])
 
-
-# Initialize login state
-if "authenticated" not in st.session_state:
-    st.session_state.authenticated = False
-
-if "auth_expiry" not in st.session_state:
-    st.session_state["auth_expiry"] = None
-
 # ~ Line 283 onward
 def extract_plan_from_filename(filename):
     fname = filename.lower()
@@ -298,11 +290,11 @@ def password_gate():
     if "user_plan" not in st.session_state:
         st.session_state.user_plan = None
 
-    if "access_granted" not in st.session_state:
-        st.session_state.access_granted = False
+    if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
 
-    if "password_expiry" not in st.session_state:
-        st.session_state.password_expiry = None
+    if "auth_expiry" not in st.session_state:
+    st.session_state["auth_expiry"] = None
 
     uploaded_file = st.file_uploader("Upload Payment Proof", type=["png", "jpg", "jpeg", "pdf"], key="payment_upload")
     # Prevent re-requesting proof if valid password exists
