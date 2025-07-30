@@ -284,17 +284,19 @@ def extract_plan_from_filename(filename):
 def password_gate():
     st.title("🔒 Enter Password to Access Dashboard")
 
-    if "valid_password" not in st.session_state:
-        st.session_state.valid_password = None
-
-    if "user_plan" not in st.session_state:
-        st.session_state.user_plan = None
-
-    if "authenticated" not in st.session_state:
+ if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
-    if "auth_expiry" not in st.session_state:
+if "auth_expiry" not in st.session_state:
     st.session_state["auth_expiry"] = None
+
+if "valid_password" not in st.session_state:
+    st.session_state.valid_password = None
+
+if "user_plan" not in st.session_state:
+    st.session_state.user_plan = None
+
+
 
     uploaded_file = st.file_uploader("Upload Payment Proof", type=["png", "jpg", "jpeg", "pdf"], key="payment_upload")
     # Prevent re-requesting proof if valid password exists
