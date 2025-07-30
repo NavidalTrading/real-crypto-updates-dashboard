@@ -275,7 +275,7 @@ def generate_signals(symbols):
 
 # Initialize login state
 if "authenticated" not in st.session_state:
-    st.session_state.authenticated = True
+    st.session_state.authenticated = False
 
 if "auth_expiry" not in st.session_state:
     st.session_state["auth_expiry"] = None
