@@ -299,9 +299,10 @@ if "user_plan" not in st.session_state:
 
 
     uploaded_file = st.file_uploader("Upload Payment Proof", type=["png", "jpg", "jpeg", "pdf"], key="payment_upload")
-    # Prevent re-requesting proof if valid password exists
-    if st.session_state.get("valid_password") and st.session_state.get("password_expiry") and datetime.now() < st.session_state["password_expiry"]:
-        uploaded_file = None  # Prevent prompting again
+   # Prevent asking for proof again if already authenticated
+if st.session_state.get("access_granted"):
+    uploaded_file = True  # simulate proof to bypass re-upload
+
 
 
 
@@ -324,8 +325,9 @@ if "user_plan" not in st.session_state:
         submitted = st.form_submit_button("Submit")
 
         if submitted:
-            if st.session_state.valid_password is None and not uploaded_file:
+            if st.session_state.valid_password is None and not uploaded_file and not st.session_state.access_granted:
                  st.error("⚠️ Please upload your payment proof or use a previously provided password.")
+
             elif  st.session_state.password_expiry and datetime.now() > st.session_state.password_expiry:
                  st.error("⏰ Password expired. Please re-upload your payment proof to receive a new one.")
                  st.session_state.access_granted = False
