@@ -334,7 +334,7 @@ def password_gate():
             elif  st.session_state.password_expiry and datetime.now() > st.session_state.password_expiry:
                  st.error("⏰ Password expired. Please re-upload your payment proof to receive a new one.")
                  st.session_state.access_granted = False
-                 st.session_state.valid_password = True
+                 st.session_state.valid_password = None
                  st.session_state.password_expiry = None
             elif password == st.session_state.valid_password:
                  st.session_state.access_granted = True
