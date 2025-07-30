@@ -340,10 +340,8 @@ def password_gate():
                
 now = datetime.now()
 
-# Check if password was previously accepted and still valid
-if st.session_state.get("access_granted") and st.session_state.get("password_expiry") and now < st.session_state.password_expiry:
-    pass  # Access still valid
-else:
+# Validate session: password granted AND not expired
+if not (st.session_state.get("access_granted") and st.session_state.get("password_expiry") and now < st.session_state.get("password_expiry")):
     password_gate()
     st.stop()
 
