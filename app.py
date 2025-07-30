@@ -310,6 +310,7 @@ def password_gate():
         uploaded_file = None  # Prevent prompting again
 
 
+
     # When uploading payment proof for the first time
     if uploaded_file and st.session_state.valid_password is None :
         plan = extract_plan_from_filename(uploaded_file.name)
