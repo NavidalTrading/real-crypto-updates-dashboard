@@ -284,7 +284,7 @@ def extract_plan_from_filename(filename):
 def password_gate():
     st.title("🔒 Enter Password to Access Dashboard")
 
- if "authenticated" not in st.session_state:
+if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
 if "auth_expiry" not in st.session_state:
