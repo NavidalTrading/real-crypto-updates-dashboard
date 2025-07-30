@@ -305,6 +305,10 @@ def password_gate():
         st.session_state.password_expiry = None
 
     uploaded_file = st.file_uploader("Upload Payment Proof", type=["png", "jpg", "jpeg", "pdf"], key="payment_upload")
+    # Prevent re-requesting proof if valid password exists
+    if st.session_state.get("valid_password") and st.session_state.get("password_expiry") and datetime.now() < st.session_state["password_expiry"]:
+        uploaded_file = None  # Prevent prompting again
+
 
     # When uploading payment proof for the first time
     if uploaded_file and st.session_state.valid_password is None :
@@ -338,12 +342,7 @@ def password_gate():
             else:
                  st.error("❌ Incorrect password.")
                
-now = datetime.now()
-
-# Check if password was previously accepted and still valid
-if st.session_state.get("access_granted") and st.session_state.get("password_expiry") and now < st.session_state.password_expiry:
-    pass  # Access still valid
-else:
+if not st.session_state.get("access_granted"):
     password_gate()
     st.stop()
 
