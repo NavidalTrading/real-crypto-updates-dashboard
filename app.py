@@ -273,14 +273,22 @@ def generate_signals(symbols):
     return pd.DataFrame(results, columns=["Symbol", "Entry Price", "TP / SL", "Leverage", "Signal"])
 
 
-# Initialize login state
+# Initialize session state values
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
 if "auth_expiry" not in st.session_state:
-    st.session_state["auth_expiry"] = None
+    st.session_state.auth_expiry = None
 
-# ~ Line 283 onward
+if "valid_password" not in st.session_state:
+    st.session_state.valid_password = None
+
+if "user_plan" not in st.session_state:
+    st.session_state.user_plan = None
+
+if "password_expiry" not in st.session_state:
+    st.session_state.password_expiry = None
+
 def extract_plan_from_filename(filename):
     fname = filename.lower()
     if "basic" in fname:
@@ -292,27 +300,10 @@ def extract_plan_from_filename(filename):
 def password_gate():
     st.title("🔒 Enter Password to Access Dashboard")
 
-    if "valid_password" not in st.session_state:
-        st.session_state.valid_password = None
+    uploaded_file = st.file_uploader("Upload Payment Proof", type=["png", "jpg", "jpeg", "pdf"])
 
-    if "user_plan" not in st.session_state:
-        st.session_state.user_plan = None
-
-    if "access_granted" not in st.session_state:
-        st.session_state.access_granted = False
-
-    if "password_expiry" not in st.session_state:
-        st.session_state.password_expiry = None
-
-    uploaded_file = st.file_uploader("Upload Payment Proof", type=["png", "jpg", "jpeg", "pdf"], key="payment_upload")
-    # Prevent re-requesting proof if valid password exists
-    if st.session_state.get("valid_password") and st.session_state.get("password_expiry") and datetime.now() < st.session_state["password_expiry"]:
-        uploaded_file = None  # Prevent prompting again
-
-
-
-    # When uploading payment proof for the first time
-    if uploaded_file and st.session_state.valid_password is None :
+    # Only generate password from proof if not authenticated
+    if uploaded_file and not st.session_state.valid_password:
         plan = extract_plan_from_filename(uploaded_file.name)
         if plan:
             st.session_state.user_plan = f"{plan} Plan"
@@ -324,28 +315,39 @@ def password_gate():
         else:
             st.error("❌ Filename must include 'basic' or 'pro' to determine plan.") 
 
-    # Show password form
-    with st.form("password_form"):
+    with st.form("login_form"):
         password = st.text_input("Enter Password to continue:", type="password")
         submitted = st.form_submit_button("Submit")
 
         if submitted:
-            if st.session_state.valid_password is None and not uploaded_file:
-                 st.error("⚠️ Please upload your payment proof or use a previously provided password.")
-            elif  st.session_state.password_expiry and datetime.now() > st.session_state.password_expiry:
-                 st.error("⏰ Password expired. Please re-upload your payment proof to receive a new one.")
-                 st.session_state.access_granted = False
-                 st.session_state.valid_password = None
-                 st.session_state.password_expiry = None
+            if not st.session_state.valid_password:
+                st.error("⚠️ Please upload your payment proof or use a previously provided password.")
+            elif st.session_state.password_expiry and datetime.now() > st.session_state.password_expiry:
+                st.error("⏰ Password expired. Please re-upload your payment proof.")
+                st.session_state.valid_password = None
+                st.session_state.authenticated = False
             elif password == st.session_state.valid_password:
-                 st.session_state.access_granted = True
-                 st.success("✅ Access granted.")
+                st.success("✅ Access granted.")
+                st.session_state.authenticated = True
+                st.session_state.auth_expiry = datetime.now() + timedelta(days=30)
             else:
-                 st.error("❌ Incorrect password.")
+                st.error("❌ Incorrect password.")
+
                
-if not st.session_state.get("access_granted"):
+if not st.session_state.authenticated:
     password_gate()
     st.stop()
+
+# Auto-logout if expired
+if st.session_state.auth_expiry and datetime.now() > st.session_state.auth_expiry:
+    st.warning("⏰ Your session expired. Please log in again.")
+    st.session_state.authenticated = False
+    st.session_state.valid_password = None
+    st.session_state.password_expiry = None
+    st.session_state.user_plan = None
+    password_gate()
+    st.stop()
+
 
 # Theme switch
 mode = st.sidebar.radio("Theme Mode", [ "Light"])
